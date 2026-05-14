@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Explorer 🔬</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .stars { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .star { position:absolute; background:white; border-radius:50%; animation:twinkle 3s infinite; }
+  @keyframes twinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+
+  #app { position:relative; z-index:1; width:100%; max-width:720px; }
+
+  .screen { display:none; }
+  .screen.active { display:block; }
+
+  /* ── SHARED CARD ── */
+  .card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 2px solid rgba(255,255,255,0.1);
+    padding: 40px 36px;
+  }
+
+  /* ── BACK BUTTON ── */
+  .back-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 7px 16px;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+  /* ═══════════════════════════════════════════
+     MENU SCREEN
+  ═══════════════════════════════════════════ */
+  #menu-screen { text-align: center; }
+  #menu-screen .logo { font-size: 72px; margin-bottom: 10px; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  #menu-screen h1 {
+    font-size: 2.4em; font-weight: 900;
+    background: linear-gradient(90deg, #f9ca24, #f0932b, #eb4d4b, #6c5ce7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 6px;
+  }
+  #menu-screen .tagline { color: rgba(255,255,255,0.6); font-size: 1.05em; margin-bottom: 35px; }
+
+  .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .game-card {
+    background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+    padding: 28px 20px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    color: white;
+  }
+  .game-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.3); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+  .game-card .gc-icon { font-size: 3em; display:block; margin-bottom: 12px; }
+  .game-card h2 { font-size: 1.2em; font-weight: 900; margin-bottom: 8px; }
+  .game-card p { font-size: 0.85em; color: rgba(255,255,255,0.55); line-height: 1.4; }
+  .game-card.trivia-card { border-color: rgba(249,202,36,0.3); }
+  .game-card.trivia-card:hover { border-color: #f9ca24; box-shadow: 0 16px 40px rgba(249,202,36,0.2); }
+  .game-card.planet-card { border-color: rgba(108,92,231,0.3); }
+  .game-card.planet-card:hover { border-color: #a29bfe; box-shadow: 0 16px 40px rgba(108,92,231,0.2); }
+
+  /* ═══════════════════════════════════════════
+     TRIVIA – START SCREEN
+  ═══════════════════════════════════════════ */
+  #start-screen { text-align: center; }
+  #start-screen .logo { font-size: 64px; margin-bottom: 8px; animation: bounce 2s infinite; }
+  #start-screen h1 {
+    font-size: 2em; font-weight: 900;
+    background: linear-gradient(90deg, #f9ca24, #f0932b, #eb4d4b, #6c5ce7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 6px;
+  }
+  #start-screen p { color: rgba(255,255,255,0.7); font-size: 1em; margin-bottom: 24px; }
+
+  .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .cat-btn {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 16px; padding: 16px 12px; cursor: pointer; color: white;
+    font-family: 'Nunito', sans-serif; font-size: 1em; font-weight: 700;
+    transition: all 0.2s; text-align: center;
+  }
+  .cat-btn:hover { background: rgba(255,255,255,0.18); transform: translateY(-3px); }
+  .cat-btn.selected { border-color: #f9ca24; background: rgba(249,202,36,0.2); box-shadow: 0 0 20px rgba(249,202,36,0.3); }
+  .cat-btn .cat-icon { font-size: 1.8em; display:block; margin-bottom: 5px; }
+
+  .start-btn {
+    background: linear-gradient(135deg, #f9ca24, #f0932b); border: none;
+    border-radius: 50px; padding: 16px 46px;
+    font-family: 'Nunito', sans-serif; font-size: 1.2em; font-weight: 900;
+    color: #1a1a2e; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 8px 30px rgba(249,202,36,0.4);
+  }
+  .start-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(249,202,36,0.5); }
+  .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── TRIVIA GAME SCREEN ── */
+  #game-screen { }
+  .hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+  .score-box { background:rgba(249,202,36,.15); border:2px solid rgba(249,202,36,.4); border-radius:12px; padding:7px 16px; color:#f9ca24; font-weight:900; font-size:1.05em; }
+  .lives { font-size: 1.3em; letter-spacing: 4px; }
+  .progress-bar-wrap { background:rgba(255,255,255,.1); border-radius:10px; height:10px; margin-bottom:20px; overflow:hidden; }
+  .progress-bar { height:100%; border-radius:10px; background:linear-gradient(90deg,#6c5ce7,#a29bfe); transition:width .5s ease; }
+  .category-badge { display:inline-block; background:rgba(108,92,231,.3); border:1px solid rgba(108,92,231,.6); border-radius:20px; padding:4px 14px; font-size:.85em; color:#a29bfe; font-weight:700; margin-bottom:12px; }
+  .question-text { color:white; font-size:1.3em; font-weight:700; line-height:1.4; margin-bottom:22px; min-height:56px; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+  .option-btn { background:rgba(255,255,255,.07); border:2px solid rgba(255,255,255,.15); border-radius:16px; padding:16px 14px; cursor:pointer; color:white; font-family:'Nunito',sans-serif; font-size:1em; font-weight:700; text-align:left; transition:all .15s; line-height:1.3; }
+  .option-btn:hover:not(:disabled) { background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.4); transform:translateY(-2px); }
+  .option-btn .opt-letter { display:inline-block; background:rgba(255,255,255,.15); border-radius:8px; width:26px; height:26px; line-height:26px; text-align:center; margin-right:8px; font-size:.9em; }
+  .option-btn.correct { background:rgba(0,210,100,.25); border-color:#00d264; box-shadow:0 0 20px rgba(0,210,100,.3); }
+  .option-btn.wrong { background:rgba(235,77,77,.25); border-color:#eb4d4b; }
+  .option-btn:disabled { cursor:default; }
+  .feedback-box { border-radius:14px; padding:13px 16px; font-weight:700; font-size:.95em; min-height:52px; transition:all .3s; display:flex; align-items:center; gap:10px; }
+  .feedback-box.correct { background:rgba(0,210,100,.15); border:2px solid rgba(0,210,100,.4); color:#00d264; }
+  .feedback-box.wrong { background:rgba(235,77,77,.12); border:2px solid rgba(235,77,77,.3); color:#ff7675; }
+  .feedback-box.hidden { background:transparent; border:2px solid transparent; color:transparent; }
+  .next-btn { width:100%; background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; margin-top:12px; transition:all .2s; display:none; }
+  .next-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(108,92,231,.4); }
+
+  /* ── TRIVIA END SCREEN ── */
+  #end-screen { text-align:center; }
+  .trophy { font-size:72px; margin-bottom:8px; }
+  #end-screen h2 { font-size:2em; font-weight:900; color:white; margin-bottom:8px; }
+  .final-score { font-size:3.6em; font-weight:900; background:linear-gradient(90deg,#f9ca24,#f0932b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin:8px 0; }
+  .stars-earned { font-size:1.8em; margin:8px 0 4px; }
+  .end-message { color:rgba(255,255,255,.7); font-size:1.05em; margin-bottom:24px; }
+  .end-stats { display:flex; justify-content:center; gap:16px; margin-bottom:24px; }
+  .stat-chip { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); border-radius:12px; padding:10px 18px; color:white; }
+  .stat-chip .stat-val { font-size:1.5em; font-weight:900; }
+  .stat-chip .stat-label { font-size:.8em; color:rgba(255,255,255,.5); }
+  .end-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .play-again-btn { background:linear-gradient(135deg,#f9ca24,#f0932b); border:none; border-radius:50px; padding:14px 38px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:#1a1a2e; cursor:pointer; transition:all .2s; box-shadow:0 8px 30px rgba(249,202,36,.4); }
+  .play-again-btn:hover { transform:translateY(-3px) scale(1.03); }
+  .menu-btn-sm { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.2); border-radius:50px; padding:14px 28px; font-family:'Nunito',sans-serif; font-size:1.05em; font-weight:700; color:white; cursor:pointer; transition:all .2s; }
+  .menu-btn-sm:hover { background:rgba(255,255,255,.15); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece { position:fixed; width:10px; height:10px; border-radius:2px; top:-20px; animation:fall linear forwards; z-index:999; pointer-events:none; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
+  @keyframes pulse-correct { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  .pulse { animation:pulse-correct .35s ease; }
+
+
+  /* ═══════════════════════════════════════════
+     PLANET ORDER GAME
+  ═══════════════════════════════════════════ */
+
+  #planet-screen { }
+
+  .planet-header { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .planet-header h2 { font-size:1.5em; font-weight:900; color:white; }
+  .planet-subhead { color:rgba(255,255,255,.55); font-size:.9em; margin-bottom:22px; }
+
+  /* Solar system row */
+  .solar-row-wrap { overflow-x:auto; padding-bottom:8px; margin-bottom:18px; }
+  .solar-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: max-content;
+    padding: 10px 4px;
+  }
+
+  /* Sun */
+  .sun-icon {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 52px;
+  }
+  .sun-ball {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff9c4, #f9ca24, #f0932b);
+    box-shadow: 0 0 20px rgba(249,202,36,.7), 0 0 40px rgba(249,202,36,.3);
+    flex-shrink: 0;
+  }
+  .sun-label { font-size: .65em; color: rgba(255,255,255,.5); font-weight: 700; }
+
+  /* Orbit line dots */
+  .orbit-dots { display: flex; flex-direction: column; gap: 3px; align-self: center; }
+  .orbit-dot { width: 3px; height: 3px; background: rgba(255,255,255,.2); border-radius: 50%; }
+
+  /* Drop slots */
+  .p-slot {
+    width: 68px; min-height: 88px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 0;
+    border: 2px dashed rgba(255,255,255,.2);
+    border-radius: 16px;
+    padding: 6px 4px;
+    transition: all .2s;
+    cursor: default;
+  }
+  .p-slot.drag-over {
+    border-color: #a29bfe;
+    background: rgba(108,92,231,.2);
+    transform: scale(1.06);
+  }
+  .p-slot.correct-slot { border-color: #00d264 !important; background: rgba(0,210,100,.12) !important; }
+  .p-slot.wrong-slot   { border-color: #eb4d4b !important; background: rgba(235,77,77,.12) !important; }
+
+  .slot-num {
+    font-size: .65em; font-weight: 900; color: rgba(255,255,255,.35);
+    margin-bottom: 4px;
+  }
+  .slot-empty-icon { font-size: 1.4em; opacity: .25; margin-top: 6px; }
+
+  /* Planet cards (in slot or tray) */
+  .planet-card {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    cursor: grab; user-select: none; touch-action: none;
+    transition: transform .15s, opacity .15s;
+  }
+  .planet-card:active { cursor: grabbing; transform: scale(1.08); }
+  .planet-card.dragging-ghost { opacity: .35; }
+
+  /* Planet ball in slot: fixed display size */
+  .p-slot .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+  .p-slot .p-ball { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; }
+  .p-slot .p-name { font-size: .62em; font-weight: 900; color: rgba(255,255,255,.8); text-align: center; line-height: 1.1; }
+
+  /* Planet cards in tray: bigger */
+  #planet-tray .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+  #planet-tray .p-ball { width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0; }
+  #planet-tray .p-name { font-size: .72em; font-weight: 900; color: rgba(255,255,255,.85); text-align: center; }
+
+  /* Saturn ring */
+  .saturn-ring {
+    position: absolute;
+    width: 145%; height: 36%;
+    border: 3px solid rgba(255,215,0,.65);
+    border-radius: 50%;
+    top: 32%; left: -22%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .p-slot .saturn-ring { border-width: 2px; }
+
+  /* Planet tray */
+  #planet-tray {
+    background: rgba(255,255,255,.04);
+    border: 2px dashed rgba(255,255,255,.12);
+    border-radius: 20px;
+    padding: 16px 12px;
+    min-height: 110px;
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center;
+    margin-bottom: 20px;
+    transition: border-color .2s, background .2s;
+  }
+  #planet-tray.drag-over-tray {
+    border-color: rgba(162,155,254,.5);
+    background: rgba(108,92,231,.08);
+  }
+  #planet-tray .tray-placeholder {
+    color: rgba(255,255,255,.25); font-size: .9em; font-weight: 700; font-style: italic;
+  }
+
+  /* Planet game action buttons */
+  .planet-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .check-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9); border: none; border-radius: 50px;
+    padding: 14px 36px; font-family: 'Nunito',sans-serif; font-size: 1.1em; font-weight: 900;
+    color: white; cursor: pointer; transition: all .2s; box-shadow: 0 6px 20px rgba(0,184,148,.35);
+  }
+  .check-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,184,148,.45); }
+  .check-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .clear-btn {
+    background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.2); border-radius: 50px;
+    padding: 14px 24px; font-family: 'Nunito',sans-serif; font-size: 1em; font-weight: 700;
+    color: rgba(255,255,255,.7); cursor: pointer; transition: all .2s;
+  }
+  .clear-btn:hover { background: rgba(255,255,255,.14); color: white; }
+
+  /* Slot labels row */
+  .slot-labels-row {
+    display: flex; justify-content: space-between;
+    padding: 0 4px; margin-bottom: 6px;
+    color: rgba(255,255,255,.3); font-size: .75em; font-weight: 700;
+  }
+
+  /* ── PLANET RESULT SCREEN ── */
+  #planet-result-screen { text-align: center; }
+  #planet-result-screen .trophy { font-size:66px; margin-bottom:8px; }
+  #planet-result-screen h2 { font-size:2em; font-weight:900; color:white; margin-bottom:4px; }
+  .planet-score-big { font-size:3.4em; font-weight:900; background:linear-gradient(90deg,#a29bfe,#6c5ce7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin:8px 0; }
+  .result-tagline { color:rgba(255,255,255,.6); font-size:1em; margin-bottom:22px; }
+
+  .correct-order-title { font-size:.9em; font-weight:900; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
+  .correct-order-row {
+    display: flex; align-items: center; gap: 6px; overflow-x: auto;
+    padding: 10px 0 14px; justify-content: flex-start; margin-bottom: 22px;
+  }
+  .co-planet {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    min-width: 58px; flex-shrink: 0;
+  }
+  .co-ball { width: 42px; height: 42px; border-radius: 50%; position: relative; }
+  .co-ring { position:absolute; width:145%; height:36%; border:2px solid rgba(255,215,0,.65); border-radius:50%; top:32%; left:-22%; pointer-events:none; }
+  .co-name { font-size:.62em; font-weight:900; color:rgba(255,255,255,.75); text-align:center; }
+  .co-check { font-size:.9em; }
+  .co-arrow { color:rgba(255,255,255,.2); font-size:.9em; align-self:center; flex-shrink:0; }
+
+  .planet-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .try-again-btn { background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:50px; padding:14px 36px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; transition:all .2s; box-shadow:0 6px 20px rgba(108,92,231,.4); }
+  .try-again-btn:hover { transform:translateY(-2px); }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════
+       MENU SCREEN
+  ══════════════════════════════════ -->
+  <div id="menu-screen" class="screen card active">
+    <div class="logo">🔭</div>
+    <h1>Science Explorer</h1>
+    <p class="tagline">Choose a game and start exploring!</p>
+    <div class="game-cards">
+      <div class="game-card trivia-card" onclick="showScreen('start-screen')">
+        <span class="gc-icon">🔬</span>
+        <h2>Science Trivia</h2>
+        <p>Answer questions across 5 science topics. 3 lives, 10 rounds!</p>
+      </div>
+      <div class="game-card planet-card" onclick="startPlanetGame()">
+        <span class="gc-icon">🪐</span>
+        <h2>Planet Order</h2>
+        <p>Drag all 8 planets into the correct order from the Sun!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TRIVIA: CATEGORY PICKER
+  ══════════════════════════════════ -->
+  <div id="start-screen" class="screen card">
+    <button class="back-btn" onclick="showScreen('menu-screen')">← Menu</button>
+    <div style="text-align:center">
+      <div class="logo">🔬</div>
+      <h1>Science Trivia</h1>
+      <p>Pick a category and test your smarts!</p>
+      <div class="category-grid">
+        <button class="cat-btn" data-cat="space" onclick="selectCategory(this)"><span class="cat-icon">🪐</span>Space & Planets</button>
+        <button class="cat-btn" data-cat="animals" onclick="selectCategory(this)"><span class="cat-icon">🦁</span>Animals</button>
+        <button class="cat-btn" data-cat="body" onclick="selectCategory(this)"><span class="cat-icon">🫀</span>Human Body</button>
+        <button class="cat-btn" data-cat="nature" onclick="selectCategory(this)"><span class="cat-icon">🌿</span>Nature & Plants</button>
+        <button class="cat-btn" data-cat="physics" onclick="selectCategory(this)"><span class="cat-icon">⚡</span>Forces & Energy</button>
+        <button class="cat-btn" data-cat="mix" onclick="selectCategory(this)"><span class="cat-icon">🎲</span>Mixed Bag!</button>
+      </div>
+      <button class="start-btn" id="start-btn" onclick="startGame()" disabled>🚀 Start Playing!</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TRIVIA: GAMEPLAY
+  ══════════════════════════════════ -->
+  <div id="game-screen" class="screen card">
+    <div class="hud">
+      <div class="score-box">⭐ <span id="score-display">0</span></div>
+      <div style="color:rgba(255,255,255,.6);font-weight:700">Q <span id="q-num">1</span> / <span id="q-total">10</span></div>
+      <div class="lives" id="lives-display">❤️❤️❤️</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+    <div class="category-badge" id="cat-badge">🪐 Space</div>
+    <div class="question-text" id="question-text">Loading...</div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="feedback-box hidden" id="feedback-box"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question →</button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TRIVIA: RESULTS
+  ══════════════════════════════════ -->
+  <div id="end-screen" class="screen card">
+    <div class="trophy" id="end-trophy">🏆</div>
+    <h2 id="end-title">Amazing Work!</h2>
+    <div class="final-score" id="final-score">0</div>
+    <div class="stars-earned" id="stars-earned">⭐⭐⭐</div>
+    <p class="end-message" id="end-message">You're a science star!</p>
+    <div class="end-stats">
+      <div class="stat-chip"><div class="stat-val" id="stat-correct">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat-chip"><div class="stat-val" id="stat-wrong">0</div><div class="stat-label">Wrong</div></div>
+      <div class="stat-chip"><div class="stat-val" id="stat-streak">0</div><div class="stat-label">Best Streak</div></div>
+    </div>
+    <div class="end-btns">
+      <button class="play-again-btn" onclick="resetGame()">🔄 Play Again</button>
+      <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PLANET ORDER: GAME
+  ══════════════════════════════════ -->
+  <div id="planet-screen" class="screen card">
+    <button class="back-btn" onclick="showScreen('menu-screen')">← Menu</button>
+    <div class="planet-header">
+      <span style="font-size:1.8em">🪐</span>
+      <h2>Planet Order Challenge</h2>
+    </div>
+    <p class="planet-subhead">Drag the planets into the correct order from the Sun — closest first!</p>
+
+    <div class="slot-labels-row">
+      <span>☀️ Closest to Sun</span>
+      <span>Farthest from Sun 🌌</span>
+    </div>
+
+    <!-- Scrollable solar system row -->
+    <div class="solar-row-wrap">
+      <div class="solar-row" id="solar-row">
+        <!-- Built by JS -->
+      </div>
+    </div>
+
+    <p style="color:rgba(255,255,255,.35);font-size:.8em;text-align:center;margin-bottom:10px">⬆ Drop planets here &nbsp;|&nbsp; Drag from tray below ⬇</p>
+
+    <!-- Tray -->
+    <div id="planet-tray"></div>
+
+    <div class="planet-actions">
+      <button class="clear-btn" onclick="clearPlanetSlots()">🗑 Clear All</button>
+      <button class="check-btn" id="check-btn" onclick="checkPlanetOrder()">✅ Check My Order!</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PLANET ORDER: RESULTS
+  ══════════════════════════════════ -->
+  <div id="planet-result-screen" class="screen card">
+    <div class="trophy" id="p-trophy">🏆</div>
+    <h2 id="p-title">Incredible!</h2>
+    <div class="planet-score-big" id="p-score">8 / 8</div>
+    <p class="result-tagline" id="p-tagline">You know your solar system!</p>
+
+    <p class="correct-order-title">✅ Correct Order</p>
+    <div class="correct-order-row" id="correct-order-row"></div>
+
+    <div class="planet-result-btns">
+      <button class="try-again-btn" onclick="startPlanetGame()">🔄 Try Again</button>
+      <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ══════════════════════════════════════════════
+//  STARS
+// ══════════════════════════════════════════════
+(function createStars() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 3 + 1;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ══════════════════════════════════════════════
+//  SHARED
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function launchConfetti() {
+  const colors = ['#f9ca24','#f0932b','#eb4d4b','#6c5ce7','#00b894','#00cec9','#a29bfe'];
+  for (let i = 0; i < 90; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;`;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i * 25);
+  }
+}
+
+
+// ══════════════════════════════════════════════
+//  TRIVIA GAME
+// ══════════════════════════════════════════════
+const QUESTIONS = {
+  space: [
+    { q:"Which planet is known as the Red Planet?", opts:["Venus","Mars","Jupiter","Saturn"], ans:1, fact:"Mars looks red because of iron oxide (rust) on its surface!" },
+    { q:"How many planets are in our Solar System?", opts:["7","8","9","10"], ans:1, fact:"Our Solar System has 8 planets. Pluto is now called a 'dwarf planet'." },
+    { q:"What is the closest star to Earth?", opts:["Polaris","Sirius","The Sun","Betelgeuse"], ans:2, fact:"The Sun is about 93 million miles away — very close for a star!" },
+    { q:"What is the largest planet in our Solar System?", opts:["Saturn","Neptune","Earth","Jupiter"], ans:3, fact:"Jupiter is so big, more than 1,300 Earths could fit inside it!" },
+    { q:"What do we call a large group of stars, gas, and dust in space?", opts:["A comet","A galaxy","A nebula","An asteroid"], ans:1, fact:"Our home galaxy is called the Milky Way and contains billions of stars!" },
+    { q:"Which planet has the most moons in our Solar System?", opts:["Jupiter","Saturn","Uranus","Neptune"], ans:1, fact:"Saturn has over 140 known moons — the most of any planet!" },
+    { q:"What is a shooting star actually made of?", opts:["A burning star","Space dust or a small rock","Lightning","A comet's tail"], ans:1, fact:"Meteors are tiny rocks that glow as they burn up in Earth's atmosphere." },
+    { q:"How long does it take Earth to travel around the Sun?", opts:["1 month","24 hours","1 year","10 years"], ans:2, fact:"That's why one year = 365 days — one full trip around the Sun!" },
+    { q:"Which planet spins on its side like a rolling ball?", opts:["Mercury","Venus","Uranus","Neptune"], ans:2, fact:"Uranus spins almost perfectly on its side — scientists aren't sure why!" },
+    { q:"What keeps planets orbiting around the Sun?", opts:["Magnetism","Gravity","Wind","Light"], ans:1, fact:"Gravity is an invisible force that pulls objects toward each other across space." },
+  ],
+  animals: [
+    { q:"How many legs does a spider have?", opts:["6","8","10","4"], ans:1, fact:"Spiders are arachnids, not insects! Insects have 6 legs; spiders have 8." },
+    { q:"What do you call a baby frog?", opts:["Cub","Larva","Tadpole","Pup"], ans:2, fact:"Tadpoles breathe underwater with gills, then grow lungs as they become frogs!" },
+    { q:"Which animal is the fastest on land?", opts:["Lion","Cheetah","Horse","Ostrich"], ans:1, fact:"A cheetah can reach 70 mph in short sprints — faster than a highway car!" },
+    { q:"What is the largest animal on Earth?", opts:["Elephant","Great White Shark","Blue Whale","Giraffe"], ans:2, fact:"Blue whales can be 100 feet long and weigh as much as 30 elephants!" },
+    { q:"How do fish breathe underwater?", opts:["They hold their breath","Through gills","Through their skin","They come up for air"], ans:1, fact:"Gills pull dissolved oxygen right out of the water!" },
+    { q:"What is a group of wolves called?", opts:["A herd","A flock","A pack","A pod"], ans:2, fact:"Wolves live and hunt together in packs led by an alpha pair." },
+    { q:"Which bird cannot fly but is an excellent swimmer?", opts:["Flamingo","Penguin","Ostrich","Eagle"], ans:1, fact:"Penguins use their wings as flippers — they're incredible swimmers!" },
+    { q:"What type of animal is a dolphin?", opts:["Fish","Reptile","Mammal","Amphibian"], ans:2, fact:"Dolphins breathe air, nurse their babies with milk, and are very intelligent!" },
+    { q:"How do butterflies taste their food?", opts:["With their tongue","With their antennae","With their feet","With their eyes"], ans:2, fact:"Butterflies have taste receptors on their feet — they taste plants by landing on them!" },
+    { q:"Which animal has the longest neck?", opts:["Camel","Giraffe","Ostrich","Flamingo"], ans:1, fact:"A giraffe's neck can be 6 feet long, yet it has the same 7 neck bones as humans!" },
+  ],
+  body: [
+    { q:"How many bones are in an adult human body?", opts:["106","156","206","256"], ans:2, fact:"Babies are born with about 300 bones — many fuse together as we grow!" },
+    { q:"Which organ pumps blood around your body?", opts:["Lungs","Brain","Heart","Liver"], ans:2, fact:"Your heart beats about 100,000 times every single day!" },
+    { q:"What do your lungs take in from the air you breathe?", opts:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"], ans:2, fact:"Your lungs transfer oxygen into your blood and remove carbon dioxide." },
+    { q:"What is the largest organ in the human body?", opts:["Brain","Liver","Lungs","Skin"], ans:3, fact:"Skin covers your whole body and helps keep out germs and regulate temperature!" },
+    { q:"What do we call the hard white covering on our teeth?", opts:["Dentin","Enamel","Calcium","Ivory"], ans:1, fact:"Tooth enamel is the hardest substance your body makes!" },
+    { q:"How many chambers does a human heart have?", opts:["2","3","4","6"], ans:2, fact:"Two chambers receive blood and two pump it back out — a perfect pump!" },
+    { q:"Which part of the body controls everything you do and think?", opts:["Heart","Spine","Stomach","Brain"], ans:3, fact:"Your brain has about 86 billion nerve cells called neurons!" },
+    { q:"What carries oxygen from your lungs to the rest of your body?", opts:["White blood cells","Red blood cells","Plasma","Platelets"], ans:1, fact:"Red blood cells contain hemoglobin, which binds to oxygen and gives blood its red color." },
+    { q:"How many permanent (adult) teeth do humans grow?", opts:["20","28–32","36","18"], ans:1, fact:"We get 20 baby teeth first, then 28–32 permanent teeth (including wisdom teeth)." },
+    { q:"Which sense organ do you use to detect smells?", opts:["Eyes","Ears","Nose","Tongue"], ans:2, fact:"Humans can detect over 1 trillion different smells — our nose is amazing!" },
+  ],
+  nature: [
+    { q:"What gas do plants produce during photosynthesis?", opts:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"], ans:2, fact:"Plants use sunlight to turn CO₂ and water into sugar — and release oxygen as a bonus!" },
+    { q:"What do you call the process where a caterpillar turns into a butterfly?", opts:["Evolution","Metamorphosis","Germination","Photosynthesis"], ans:1, fact:"Inside the chrysalis, the caterpillar completely rebuilds itself into a butterfly!" },
+    { q:"What part of a plant absorbs water from the soil?", opts:["Leaves","Stem","Flowers","Roots"], ans:3, fact:"Roots can extend far underground to find water and anchor the plant." },
+    { q:"What is rain, snow, and hail collectively called?", opts:["Condensation","Evaporation","Precipitation","Humidity"], ans:2, fact:"All forms of water falling from clouds are called precipitation!" },
+    { q:"What layer of gases surrounds Earth and protects us?", opts:["The ozone","The atmosphere","The stratosphere","The ionosphere"], ans:1, fact:"Earth's atmosphere also contains the oxygen we breathe!" },
+    { q:"What do trees use to make their own food?", opts:["Soil and rain","Sunlight, water, and CO₂","Bugs and nutrients","Wind and minerals"], ans:1, fact:"This process is called photosynthesis — plants are their own chefs!" },
+    { q:"What is the water cycle step where vapor rises and forms clouds?", opts:["Precipitation","Condensation","Transpiration","Infiltration"], ans:1, fact:"Water vapor cools as it rises and turns into tiny droplets that form clouds." },
+    { q:"Which type of rock is formed from cooled lava or magma?", opts:["Sedimentary","Metamorphic","Igneous","Limestone"], ans:2, fact:"Igneous means 'from fire' — these rocks form as lava cools and hardens!" },
+    { q:"What is the food-making part of a plant cell called?", opts:["Nucleus","Chloroplast","Vacuole","Cell wall"], ans:1, fact:"Chloroplasts contain chlorophyll, which captures sunlight for photosynthesis." },
+    { q:"What do we call animals that only eat plants?", opts:["Carnivores","Omnivores","Herbivores","Decomposers"], ans:2, fact:"Cows, rabbits, and elephants are all herbivores!" },
+  ],
+  physics: [
+    { q:"What force pulls objects toward the ground?", opts:["Magnetism","Friction","Gravity","Pressure"], ans:2, fact:"Gravity keeps us on Earth and keeps Earth orbiting the Sun!" },
+    { q:"What type of energy does food give our bodies?", opts:["Kinetic energy","Chemical energy","Electrical energy","Nuclear energy"], ans:1, fact:"Our bodies convert chemical energy in food into movement and heat!" },
+    { q:"What happens to most materials when they are heated?", opts:["They shrink","They stay the same","They expand","They melt"], ans:2, fact:"Particles move faster when heated, spreading apart and making the material bigger." },
+    { q:"Which travels faster — sound or light?", opts:["Sound","They travel the same speed","Light","It depends on the weather"], ans:2, fact:"Light travels nearly 1 million times faster than sound!" },
+    { q:"What do we call energy in motion?", opts:["Potential energy","Thermal energy","Kinetic energy","Solar energy"], ans:2, fact:"A ball rolling down a hill is a great example of kinetic energy!" },
+    { q:"What is the name of the force that slows objects down when they slide?", opts:["Gravity","Friction","Air resistance","Tension"], ans:1, fact:"Friction creates heat — that's why your hands warm up when you rub them together!" },
+    { q:"In what three states can water exist?", opts:["Hot, warm, cold","Liquid, solid, gas","Wet, frozen, steam","River, ice, cloud"], ans:1, fact:"Liquid (water), solid (ice), and gas (steam or water vapor)!" },
+    { q:"What type of simple machine is a ramp?", opts:["A lever","A pulley","An inclined plane","A wedge"], ans:2, fact:"Ramps (inclined planes) let you move heavy things with less force — just over a greater distance." },
+    { q:"What color is produced when all colors of light are mixed together?", opts:["Black","Grey","Yellow","White"], ans:3, fact:"Sunlight looks white but contains all the colors of the rainbow!" },
+    { q:"What do magnets have that lets them attract or repel each other?", opts:["Gravity","Poles (north and south)","Charge (positive/negative)","Static electricity"], ans:1, fact:"Opposite poles attract, same poles repel — every magnet has both a north and south pole!" },
+  ],
+};
+
+const LETTERS = ['A','B','C','D'];
+const CAT_INFO = {
+  space:   { label:'🪐 Space & Planets', color:'#6c5ce7' },
+  animals: { label:'🦁 Animals',         color:'#00b894' },
+  body:    { label:'🫀 Human Body',       color:'#e17055' },
+  nature:  { label:'🌿 Nature & Plants',  color:'#00cec9' },
+  physics: { label:'⚡ Forces & Energy',  color:'#fdcb6e' },
+  mix:     { label:'🎲 Mixed Bag',        color:'#a29bfe' },
+};
+
+let selectedCategory = null, questionList = [], currentIndex = 0;
+let score = 0, lives = 3, answered = false;
+let correctCount = 0, wrongCount = 0, currentStreak = 0, bestStreak = 0;
+
+function selectCategory(btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedCategory = btn.dataset.cat;
+  document.getElementById('start-btn').disabled = false;
+}
+
+function startGame() {
+  score=0; lives=3; currentIndex=0; correctCount=0; wrongCount=0; currentStreak=0; bestStreak=0; answered=false;
+  questionList = selectedCategory === 'mix'
+    ? shuffle(Object.values(QUESTIONS).flat()).slice(0,10)
+    : shuffle([...QUESTIONS[selectedCategory]]).slice(0,10);
+  document.getElementById('q-total').textContent = questionList.length;
+  showScreen('game-screen');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questionList[currentIndex];
+  document.getElementById('q-num').textContent = currentIndex + 1;
+  document.getElementById('progress-bar').style.width = `${(currentIndex/questionList.length)*100}%`;
+  document.getElementById('score-display').textContent = score;
+  renderLives();
+  const catKey = selectedCategory === 'mix' ? guessCat(q) : selectedCategory;
+  const info = CAT_INFO[catKey] || CAT_INFO.mix;
+  const badge = document.getElementById('cat-badge');
+  badge.textContent = info.label;
+  badge.style.background = info.color+'33'; badge.style.borderColor = info.color+'88'; badge.style.color = info.color;
+  document.getElementById('question-text').textContent = q.q;
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${LETTERS[i]}</span>${opt}`;
+    btn.onclick = () => handleAnswer(i);
+    grid.appendChild(btn);
+  });
+  document.getElementById('feedback-box').className = 'feedback-box hidden';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-btn').textContent = 'Next Question →';
+}
+
+function handleAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questionList[currentIndex];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback-box');
+  if (idx === q.ans) {
+    btns[idx].classList.add('correct','pulse');
+    score += 10; correctCount++; currentStreak++;
+    if (currentStreak > bestStreak) bestStreak = currentStreak;
+    document.getElementById('score-display').textContent = score;
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `✅ Correct! ${q.fact}`;
+  } else {
+    btns[idx].classList.add('wrong'); btns[q.ans].classList.add('correct');
+    lives--; wrongCount++; currentStreak = 0; renderLives();
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `❌ Not quite! The answer was <strong>${q.opts[q.ans]}</strong>. ${q.fact}`;
+  }
+  document.getElementById('next-btn').style.display = 'block';
+  if (lives <= 0) document.getElementById('next-btn').textContent = 'See Results →';
+}
+
+function renderLives() {
+  let html = '';
+  for (let i=0;i<3;i++) html += i < lives ? '❤️' : '🖤';
+  document.getElementById('lives-display').innerHTML = html;
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= questionList.length || lives <= 0) endGame();
+  else renderQuestion();
+}
+
+function endGame() {
+  const pct = correctCount / questionList.length;
+  let trophy, title, message, stars;
+  if (pct===1)       { trophy='🏆'; title='PERFECT SCORE!';   message="You're a science genius! Incredible job!";         stars='⭐⭐⭐'; }
+  else if (pct>=.7)  { trophy='🥇'; title='Awesome Work!';    message="You really know your science — great job!";        stars='⭐⭐⭐'; }
+  else if (pct>=.5)  { trophy='🥈'; title='Good Job!';        message="Solid effort! Keep learning and you'll be a pro!"; stars='⭐⭐'; }
+  else               { trophy='🔬'; title='Keep Exploring!';  message="Science takes practice — try again and learn!";    stars='⭐'; }
+  document.getElementById('end-trophy').textContent = trophy;
+  document.getElementById('end-title').textContent = title;
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('stars-earned').textContent = stars;
+  document.getElementById('end-message').textContent = message;
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrongCount;
+  document.getElementById('stat-streak').textContent = bestStreak;
+  showScreen('end-screen');
+  if (pct >= .7) launchConfetti();
+}
+
+function resetGame() {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('start-btn').disabled = true;
+  selectedCategory = null;
+  showScreen('start-screen');
+}
+
+function guessCat(q) {
+  for (const [cat, qs] of Object.entries(QUESTIONS)) { if (qs.includes(q)) return cat; }
+  return 'mix';
+}
+
+
+// ══════════════════════════════════════════════
+//  PLANET ORDER GAME
+// ══════════════════════════════════════════════
+
+const PLANETS = [
+  { name:'Mercury', order:0, bg:'radial-gradient(circle at 35% 30%, #d4d4d4, #9e9e9e, #616161)', fact:'Closest planet to the Sun! A full year is only 88 Earth days.' },
+  { name:'Venus',   order:1, bg:'radial-gradient(circle at 35% 30%, #fff9c4, #f5c518, #b8860b)', fact:'The hottest planet — clouds trap heat like a giant greenhouse!' },
+  { name:'Earth',   order:2, bg:'radial-gradient(circle at 35% 30%, #81d4fa, #1565c0, #2e7d32)', fact:'Our home! The only planet known to have life and liquid oceans.' },
+  { name:'Mars',    order:3, bg:'radial-gradient(circle at 35% 30%, #ff8a80, #ef5350, #b71c1c)', fact:'Has the tallest volcano — Olympus Mons is 3× taller than Everest!' },
+  { name:'Jupiter', order:4, bg:'repeating-linear-gradient(170deg, #c8a870 0%, #e8c49a 18%, #b07040 36%, #e0b080 54%, #c89060 72%, #e8d0a0 90%)', fact:'Biggest planet! Its Great Red Spot is a storm over 300 years old.' },
+  { name:'Saturn',  order:5, bg:'radial-gradient(circle at 35% 30%, #fff3b0, #ffd54f, #a07830)', hasRing:true, fact:'Famous for its beautiful rings made of billions of ice and rock pieces!' },
+  { name:'Uranus',  order:6, bg:'radial-gradient(circle at 35% 30%, #b2ebf2, #4dd0e1, #00838f)', fact:'An ice giant that spins almost completely on its side — very unusual!' },
+  { name:'Neptune', order:7, bg:'radial-gradient(circle at 35% 30%, #9fa8da, #5c6bc0, #1a237e)', fact:'Farthest planet! One Neptune year lasts 165 Earth years.' },
+];
+
+// State
+let pSlots = new Array(8).fill(null); // null | planet name
+let pDragSource = null; // { planet: name, fromSlot: number | -1 (tray) }
+let pChecked = false;
+
+// Touch drag state
+let touchDragInfo = null;
+let touchCloneEl = null;
+
+function startPlanetGame() {
+  pSlots = new Array(8).fill(null);
+  pDragSource = null;
+  pChecked = false;
+  showScreen('planet-screen');
+  renderPlanetBoard();
+}
+
+function clearPlanetSlots() {
+  pSlots = new Array(8).fill(null);
+  pChecked = false;
+  renderPlanetBoard();
+}
+
+// ── Render ──────────────────────────────────
+function renderPlanetBoard() {
+  renderSolarRow();
+  renderTray();
+}
+
+function makePlanetBall(p, size) {
+  // Returns innerHTML for a planet ball (with ring if Saturn)
+  const ring = p.hasRing
+    ? `<div class="saturn-ring" style="border-width:${size < 50 ? '2' : '3'}px"></div>`
+    : '';
+  return `<div class="planet-ball-wrap">
+    <div class="p-ball" style="background:${p.bg};width:${size}px;height:${size}px;">${ring}</div>
+  </div>`;
+}
+
+function renderSolarRow() {
+  const row = document.getElementById('solar-row');
+  row.innerHTML = '';
+
+  // Sun
+  const sunDiv = document.createElement('div');
+  sunDiv.className = 'sun-icon';
+  sunDiv.innerHTML = `<div class="sun-ball"></div><div class="sun-label">SUN</div>`;
+  row.appendChild(sunDiv);
+
+  // Orbit dots
+  const dots = document.createElement('div');
+  dots.className = 'orbit-dots';
+  dots.innerHTML = '<div class="orbit-dot"></div><div class="orbit-dot"></div><div class="orbit-dot"></div>';
+  row.appendChild(dots);
+
+  // Slots
+  pSlots.forEach((planetName, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'p-slot';
+    slot.dataset.slotIdx = i;
+    slot.ondragover  = e => { e.preventDefault(); slot.classList.add('drag-over'); };
+    slot.ondragleave = () => slot.classList.remove('drag-over');
+    slot.ondragenter = e => e.preventDefault();
+    slot.ondrop      = e => { e.preventDefault(); slot.classList.remove('drag-over'); dropOnSlot(i); };
+
+    if (planetName) {
+      const p = PLANETS.find(pl => pl.name === planetName);
+      slot.innerHTML = `<div class="slot-num">${i+1}</div>` + makePlanetBall(p, 46) + `<div class="p-name">${p.name}</div>`;
+      // Make planet in slot draggable
+      slot.querySelector('.planet-ball-wrap').setAttribute('draggable','true');
+      slot.querySelector('.planet-ball-wrap').ondragstart = e => {
+        pDragSource = { planet: planetName, fromSlot: i };
+        slot.querySelector('.planet-ball-wrap').style.opacity = '0.4';
+        e.dataTransfer.setData('text','planet');
+      };
+      slot.querySelector('.planet-ball-wrap').ondragend = () => {
+        slot.querySelector('.planet-ball-wrap') && (slot.querySelector('.planet-ball-wrap').style.opacity = '1');
+      };
+      // Touch
+      slot.querySelector('.planet-ball-wrap').ontouchstart = e => onTouchDragStart(e, planetName, i);
+    } else {
+      slot.innerHTML = `<div class="slot-num">${i+1}</div><div class="slot-empty-icon">🔵</div>`;
+    }
+    row.appendChild(slot);
+  });
+}
+
+function renderTray() {
+  const tray = document.getElementById('planet-tray');
+  tray.innerHTML = '';
+
+  const inTray = PLANETS.filter(p => !pSlots.includes(p.name));
+
+  if (inTray.length === 0) {
+    tray.innerHTML = '<div class="tray-placeholder">All planets placed! ✅ Check your order below.</div>';
+    document.getElementById('check-btn').disabled = false;
+  } else {
+    document.getElementById('check-btn').disabled = false;
+    inTray.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'planet-card';
+      card.setAttribute('draggable','true');
+      card.innerHTML = makePlanetBall(p, 58) + `<div class="p-name">${p.name}</div>`;
+
+      card.ondragstart = e => {
+        pDragSource = { planet: p.name, fromSlot: -1 };
+        setTimeout(() => card.classList.add('dragging-ghost'), 0);
+        e.dataTransfer.setData('text','planet');
+      };
+      card.ondragend = () => card.classList.remove('dragging-ghost');
+      card.ontouchstart = e => onTouchDragStart(e, p.name, -1);
+      tray.appendChild(card);
+    });
+  }
+
+  // Tray as drop zone (to return planets)
+  tray.ondragover  = e => { e.preventDefault(); tray.classList.add('drag-over-tray'); };
+  tray.ondragleave = () => tray.classList.remove('drag-over-tray');
+  tray.ondrop      = e => { e.preventDefault(); tray.classList.remove('drag-over-tray'); dropOnTray(); };
+}
+
+// ── Drop Logic ───────────────────────────────
+function dropOnSlot(slotIdx) {
+  if (!pDragSource) return;
+  const { planet, fromSlot } = pDragSource;
+  const occupant = pSlots[slotIdx];
+
+  if (fromSlot >= 0) pSlots[fromSlot] = null; // clear source slot
+
+  if (occupant !== null) {
+    if (fromSlot >= 0) {
+      pSlots[fromSlot] = occupant; // swap
+    }
+    // if from tray, occupant just returns to tray (slot cleared)
+  }
+  pSlots[slotIdx] = planet;
+  pDragSource = null;
+  pChecked = false;
+  renderPlanetBoard();
+}
+
+function dropOnTray() {
+  if (!pDragSource) return;
+  const { fromSlot } = pDragSource;
+  if (fromSlot >= 0) pSlots[fromSlot] = null;
+  pDragSource = null;
+  pChecked = false;
+  renderPlanetBoard();
+}
+
+// ── Touch Drag ───────────────────────────────
+function onTouchDragStart(e, planet, fromSlot) {
+  e.preventDefault();
+  e.stopPropagation();
+  pDragSource = { planet, fromSlot };
+  const touch = e.touches[0];
+  const rect = e.currentTarget.getBoundingClientRect();
+  touchDragInfo = { offX: touch.clientX - rect.left, offY: touch.clientY - rect.top };
+
+  touchCloneEl = e.currentTarget.cloneNode(true);
+  Object.assign(touchCloneEl.style, {
+    position:'fixed', left:rect.left+'px', top:rect.top+'px',
+    width:rect.width+'px', opacity:'0.85', pointerEvents:'none',
+    zIndex:'9999', transform:'scale(1.1)', transition:'none',
+    background:'transparent',
+  });
+  document.body.appendChild(touchCloneEl);
+}
+
+document.addEventListener('touchmove', e => {
+  if (!touchCloneEl) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  touchCloneEl.style.left = (touch.clientX - (touchDragInfo?.offX || 0)) + 'px';
+  touchCloneEl.style.top  = (touch.clientY - (touchDragInfo?.offY || 0)) + 'px';
+}, { passive: false });
+
+document.addEventListener('touchend', e => {
+  if (!pDragSource || !touchCloneEl) return;
+  touchCloneEl.remove(); touchCloneEl = null;
+
+  const touch = e.changedTouches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (!el) { pDragSource = null; return; }
+
+  const slotEl = el.closest('.p-slot');
+  const trayEl = el.closest('#planet-tray');
+
+  if (slotEl) {
+    dropOnSlot(parseInt(slotEl.dataset.slotIdx));
+  } else if (trayEl) {
+    dropOnTray();
+  } else {
+    pDragSource = null;
+  }
+  touchDragInfo = null;
+}, { passive: false });
+
+// ── Check Order ──────────────────────────────
+function checkPlanetOrder() {
+  // Check how many are placed and correct
+  let correct = 0;
+  pSlots.forEach((name, i) => {
+    if (name) {
+      const p = PLANETS.find(pl => pl.name === name);
+      if (p && p.order === i) correct++;
+    }
+  });
+
+  const placed = pSlots.filter(s => s !== null).length;
+
+  // Show results
+  let trophy, title, tagline;
+  if (correct === 8 && placed === 8) {
+    trophy = '🏆'; title = 'Perfect Order!'; tagline = 'You know your solar system inside out! Amazing!';
+    launchConfetti();
+  } else if (correct >= 6) {
+    trophy = '🥇'; title = 'Almost Perfect!'; tagline = `${correct} out of 8 correct — great job!`;
+  } else if (correct >= 4) {
+    trophy = '🥈'; title = 'Good Effort!'; tagline = `${correct} out of 8 correct — keep practicing!`;
+  } else {
+    trophy = '🔬'; title = 'Keep Learning!'; tagline = `${correct} out of 8 correct — check the correct order below!`;
+  }
+
+  document.getElementById('p-trophy').textContent = trophy;
+  document.getElementById('p-title').textContent = title;
+  document.getElementById('p-score').textContent = `${correct} / 8`;
+  document.getElementById('p-tagline').textContent = tagline;
+
+  // Build correct order row
+  const crow = document.getElementById('correct-order-row');
+  crow.innerHTML = '';
+  PLANETS.forEach((p, i) => {
+    if (i > 0) {
+      const arr = document.createElement('div');
+      arr.className = 'co-arrow'; arr.textContent = '→';
+      crow.appendChild(arr);
+    }
+    const userCorrect = pSlots[p.order] === p.name;
+    const div = document.createElement('div');
+    div.className = 'co-planet';
+    const ring = p.hasRing ? '<div class="co-ring"></div>' : '';
+    div.innerHTML = `
+      <div class="co-ball" style="background:${p.bg}">${ring}</div>
+      <div class="co-name">${p.name}</div>
+      <div class="co-check">${userCorrect ? '✅' : '❌'}</div>
+    `;
+    crow.appendChild(div);
+  });
+
+  showScreen('planet-result-screen');
+}
+</script>
+</body>
+</html>
