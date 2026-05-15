@@ -1,3 +1,112 @@
+
+Claude finished the response
+You said: Can you build a simple HTML/Javascript game to help with homeschooling
+Can you build a simple HTML/Javascript game to help with homeschooling
+
+Claude responded: Great combo!
+
+Thought process
+Thought process
+What subject should the game focus on?
+Science / Trivia
+What age range is this for?
+Ages 8–10
+Great combo! A science trivia game for ages 8–10 — I'll make it colorful, fun, and packed with age-appropriate questions. Building it now!
+
+
+Loaded tools, created a file
+Loaded tools, created a file
+Your science trivia game is ready! 🔬
+
+Open Science Explorer Trivia
+
+Here's what's packed in:
+
+5 topic categories + a Mixed Bag mode:
+
+🪐 Space & Planets
+🦁 Animals
+🫀 Human Body
+🌿 Nature & Plants
+⚡ Forces & Energy
+Game features for ages 8–10:
+
+10 questions per round, randomly shuffled so it's different each time
+3 lives — wrong answers cost a heart, but you keep playing
+Points scored for each correct answer (+10)
+A fun fact revealed after every question (right or wrong!) so kids always learn something
+Best streak tracker
+Confetti 🎉 for high scores
+A starfield background to keep it visually exciting
+Just open the file in any browser to play!
+
+You said: looks fantastic
+looks fantastic
+
+Claude responded: Thank you, glad you like it!
+Thank you, glad you like it! 😊 Let me know if you'd like to add anything — more categories, a timer, a leaderboard, different subjects like math or spelling, or anything else to make it more useful for your homeschooling.
+
+You said: Can you add a game, where the user needs to drag a planet in our solar system in the correct order
+Can you add a game, where the user needs to drag a planet in our solar system in the correct order
+
+Claude responded: Let me read the current file so I can properly integrate the new game into it.
+
+Thought process
+Thought process
+How would you like the planet game added?
+Add to the existing game (Recommended)
+Let me read the current file so I can properly integrate the new game into it.
+
+
+Read a file
+Read a file
+Good, now I have the full picture. I'll write the updated file with a main menu, the existing trivia game, and the new planet drag-and-drop game all in one.
+
+
+Created a file
+Created a file
+The file is updated! Open Science Explorer
+
+The game now opens to a main menu where you can choose between both games. Here's what's new in the Planet Order game:
+
+8 planets with distinct CSS-styled visuals — including Saturn's iconic ring
+Drag planets from the tray up into the numbered slots (1 = closest to Sun)
+Swap freely — drag a planet onto an occupied slot to swap them, or back to the tray to un-place it
+Touch support — works on tablets too with a smooth floating drag effect
+Check My Order shows your score (X/8), marks each planet ✅ or ❌, and reveals all fun facts
+Clear All button to start fresh without leaving the game
+You said: Can you randomize the order of the planets for selection
+Can you randomize the order of the planets for selection
+
+Claude responded: Quick fix — I just need to shuffle the tray order when the game starts and keep it stable during play.
+
+Thought process
+Thought process
+Quick fix — I just need to shuffle the tray order when the game starts and keep it stable during play.
+
+
+Edited 3 files
+Edited 3 files
+Done! Open the updated game
+
+The planets now appear in a random order in the tray every time the game loads or you hit "Try Again" — so kids can't just memorize the positions. The order stays stable while you're dragging them around, so it won't shuffle under your hands mid-game.
+
+You said: perfect
+perfect
+
+Claude responded: Glad it's working well!
+Glad it's working well! Let me know if you'd like to add anything else — more games, a scoreboard, a timer challenge, or new question categories. Happy to help! 🚀
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+Science trivia · HTML
+
+
+Google Chrome
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +115,9 @@
 <title>Science Explorer 🔬</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     font-family: 'Nunito', sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -19,16 +128,16 @@
     padding: 20px;
     overflow-x: hidden;
   }
-
+ 
   .stars { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
   .star { position:absolute; background:white; border-radius:50%; animation:twinkle 3s infinite; }
   @keyframes twinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
-
+ 
   #app { position:relative; z-index:1; width:100%; max-width:720px; }
-
+ 
   .screen { display:none; }
   .screen.active { display:block; }
-
+ 
   /* ── SHARED CARD ── */
   .card {
     background: rgba(255,255,255,0.05);
@@ -37,7 +146,7 @@
     border: 2px solid rgba(255,255,255,0.1);
     padding: 40px 36px;
   }
-
+ 
   /* ── BACK BUTTON ── */
   .back-btn {
     background: rgba(255,255,255,0.08);
@@ -54,7 +163,7 @@
     display: inline-block;
   }
   .back-btn:hover { background: rgba(255,255,255,0.15); color: white; }
-
+ 
   /* ═══════════════════════════════════════════
      MENU SCREEN
   ═══════════════════════════════════════════ */
@@ -68,7 +177,7 @@
     margin-bottom: 6px;
   }
   #menu-screen .tagline { color: rgba(255,255,255,0.6); font-size: 1.05em; margin-bottom: 35px; }
-
+ 
   .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .game-card {
     background: rgba(255,255,255,0.07);
@@ -88,7 +197,7 @@
   .game-card.trivia-card:hover { border-color: #f9ca24; box-shadow: 0 16px 40px rgba(249,202,36,0.2); }
   .game-card.planet-card { border-color: rgba(108,92,231,0.3); }
   .game-card.planet-card:hover { border-color: #a29bfe; box-shadow: 0 16px 40px rgba(108,92,231,0.2); }
-
+ 
   /* ═══════════════════════════════════════════
      TRIVIA – START SCREEN
   ═══════════════════════════════════════════ */
@@ -101,7 +210,7 @@
     margin-bottom: 6px;
   }
   #start-screen p { color: rgba(255,255,255,0.7); font-size: 1em; margin-bottom: 24px; }
-
+ 
   .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
   .cat-btn {
     background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
@@ -112,7 +221,7 @@
   .cat-btn:hover { background: rgba(255,255,255,0.18); transform: translateY(-3px); }
   .cat-btn.selected { border-color: #f9ca24; background: rgba(249,202,36,0.2); box-shadow: 0 0 20px rgba(249,202,36,0.3); }
   .cat-btn .cat-icon { font-size: 1.8em; display:block; margin-bottom: 5px; }
-
+ 
   .start-btn {
     background: linear-gradient(135deg, #f9ca24, #f0932b); border: none;
     border-radius: 50px; padding: 16px 46px;
@@ -122,7 +231,7 @@
   }
   .start-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(249,202,36,0.5); }
   .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
+ 
   /* ── TRIVIA GAME SCREEN ── */
   #game-screen { }
   .hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
@@ -145,7 +254,7 @@
   .feedback-box.hidden { background:transparent; border:2px solid transparent; color:transparent; }
   .next-btn { width:100%; background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; margin-top:12px; transition:all .2s; display:none; }
   .next-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(108,92,231,.4); }
-
+ 
   /* ── TRIVIA END SCREEN ── */
   #end-screen { text-align:center; }
   .trophy { font-size:72px; margin-bottom:8px; }
@@ -162,24 +271,24 @@
   .play-again-btn:hover { transform:translateY(-3px) scale(1.03); }
   .menu-btn-sm { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.2); border-radius:50px; padding:14px 28px; font-family:'Nunito',sans-serif; font-size:1.05em; font-weight:700; color:white; cursor:pointer; transition:all .2s; }
   .menu-btn-sm:hover { background:rgba(255,255,255,.15); }
-
+ 
   /* ── CONFETTI ── */
   .confetti-piece { position:fixed; width:10px; height:10px; border-radius:2px; top:-20px; animation:fall linear forwards; z-index:999; pointer-events:none; }
   @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
   @keyframes pulse-correct { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
   .pulse { animation:pulse-correct .35s ease; }
-
-
+ 
+ 
   /* ═══════════════════════════════════════════
      PLANET ORDER GAME
   ═══════════════════════════════════════════ */
-
+ 
   #planet-screen { }
-
+ 
   .planet-header { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
   .planet-header h2 { font-size:1.5em; font-weight:900; color:white; }
   .planet-subhead { color:rgba(255,255,255,.55); font-size:.9em; margin-bottom:22px; }
-
+ 
   /* Solar system row */
   .solar-row-wrap { overflow-x:auto; padding-bottom:8px; margin-bottom:18px; }
   .solar-row {
@@ -189,7 +298,7 @@
     min-width: max-content;
     padding: 10px 4px;
   }
-
+ 
   /* Sun */
   .sun-icon {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -202,11 +311,11 @@
     flex-shrink: 0;
   }
   .sun-label { font-size: .65em; color: rgba(255,255,255,.5); font-weight: 700; }
-
+ 
   /* Orbit line dots */
   .orbit-dots { display: flex; flex-direction: column; gap: 3px; align-self: center; }
   .orbit-dot { width: 3px; height: 3px; background: rgba(255,255,255,.2); border-radius: 50%; }
-
+ 
   /* Drop slots */
   .p-slot {
     width: 68px; min-height: 88px; flex-shrink: 0;
@@ -225,13 +334,13 @@
   }
   .p-slot.correct-slot { border-color: #00d264 !important; background: rgba(0,210,100,.12) !important; }
   .p-slot.wrong-slot   { border-color: #eb4d4b !important; background: rgba(235,77,77,.12) !important; }
-
+ 
   .slot-num {
     font-size: .65em; font-weight: 900; color: rgba(255,255,255,.35);
     margin-bottom: 4px;
   }
   .slot-empty-icon { font-size: 1.4em; opacity: .25; margin-top: 6px; }
-
+ 
   /* Planet cards (in slot or tray) */
   .planet-card {
     display: flex; flex-direction: column; align-items: center; gap: 5px;
@@ -240,17 +349,17 @@
   }
   .planet-card:active { cursor: grabbing; transform: scale(1.08); }
   .planet-card.dragging-ghost { opacity: .35; }
-
+ 
   /* Planet ball in slot: fixed display size */
   .p-slot .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   .p-slot .p-ball { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; }
   .p-slot .p-name { font-size: .62em; font-weight: 900; color: rgba(255,255,255,.8); text-align: center; line-height: 1.1; }
-
+ 
   /* Planet cards in tray: bigger */
   #planet-tray .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   #planet-tray .p-ball { width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0; }
   #planet-tray .p-name { font-size: .72em; font-weight: 900; color: rgba(255,255,255,.85); text-align: center; }
-
+ 
   /* Saturn ring */
   .saturn-ring {
     position: absolute;
@@ -262,7 +371,7 @@
     z-index: 2;
   }
   .p-slot .saturn-ring { border-width: 2px; }
-
+ 
   /* Planet tray */
   #planet-tray {
     background: rgba(255,255,255,.04);
@@ -281,7 +390,7 @@
   #planet-tray .tray-placeholder {
     color: rgba(255,255,255,.25); font-size: .9em; font-weight: 700; font-style: italic;
   }
-
+ 
   /* Planet game action buttons */
   .planet-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .check-btn {
@@ -297,21 +406,21 @@
     color: rgba(255,255,255,.7); cursor: pointer; transition: all .2s;
   }
   .clear-btn:hover { background: rgba(255,255,255,.14); color: white; }
-
+ 
   /* Slot labels row */
   .slot-labels-row {
     display: flex; justify-content: space-between;
     padding: 0 4px; margin-bottom: 6px;
     color: rgba(255,255,255,.3); font-size: .75em; font-weight: 700;
   }
-
+ 
   /* ── PLANET RESULT SCREEN ── */
   #planet-result-screen { text-align: center; }
   #planet-result-screen .trophy { font-size:66px; margin-bottom:8px; }
   #planet-result-screen h2 { font-size:2em; font-weight:900; color:white; margin-bottom:4px; }
   .planet-score-big { font-size:3.4em; font-weight:900; background:linear-gradient(90deg,#a29bfe,#6c5ce7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin:8px 0; }
   .result-tagline { color:rgba(255,255,255,.6); font-size:1em; margin-bottom:22px; }
-
+ 
   .correct-order-title { font-size:.9em; font-weight:900; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
   .correct-order-row {
     display: flex; align-items: center; gap: 6px; overflow-x: auto;
@@ -326,18 +435,18 @@
   .co-name { font-size:.62em; font-weight:900; color:rgba(255,255,255,.75); text-align:center; }
   .co-check { font-size:.9em; }
   .co-arrow { color:rgba(255,255,255,.2); font-size:.9em; align-self:center; flex-shrink:0; }
-
+ 
   .planet-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
   .try-again-btn { background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:50px; padding:14px 36px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; transition:all .2s; box-shadow:0 6px 20px rgba(108,92,231,.4); }
   .try-again-btn:hover { transform:translateY(-2px); }
 </style>
 </head>
 <body>
-
+ 
 <div class="stars" id="stars"></div>
-
+ 
 <div id="app">
-
+ 
   <!-- ══════════════════════════════════
        MENU SCREEN
   ══════════════════════════════════ -->
@@ -358,7 +467,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ══════════════════════════════════
        TRIVIA: CATEGORY PICKER
   ══════════════════════════════════ -->
@@ -379,7 +488,7 @@
       <button class="start-btn" id="start-btn" onclick="startGame()" disabled>🚀 Start Playing!</button>
     </div>
   </div>
-
+ 
   <!-- ══════════════════════════════════
        TRIVIA: GAMEPLAY
   ══════════════════════════════════ -->
@@ -396,7 +505,7 @@
     <div class="feedback-box hidden" id="feedback-box"></div>
     <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question →</button>
   </div>
-
+ 
   <!-- ══════════════════════════════════
        TRIVIA: RESULTS
   ══════════════════════════════════ -->
@@ -416,7 +525,7 @@
       <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
     </div>
   </div>
-
+ 
   <!-- ══════════════════════════════════
        PLANET ORDER: GAME
   ══════════════════════════════════ -->
@@ -427,30 +536,30 @@
       <h2>Planet Order Challenge</h2>
     </div>
     <p class="planet-subhead">Drag the planets into the correct order from the Sun — closest first!</p>
-
+ 
     <div class="slot-labels-row">
       <span>☀️ Closest to Sun</span>
       <span>Farthest from Sun 🌌</span>
     </div>
-
+ 
     <!-- Scrollable solar system row -->
     <div class="solar-row-wrap">
       <div class="solar-row" id="solar-row">
         <!-- Built by JS -->
       </div>
     </div>
-
+ 
     <p style="color:rgba(255,255,255,.35);font-size:.8em;text-align:center;margin-bottom:10px">⬆ Drop planets here &nbsp;|&nbsp; Drag from tray below ⬇</p>
-
+ 
     <!-- Tray -->
     <div id="planet-tray"></div>
-
+ 
     <div class="planet-actions">
       <button class="clear-btn" onclick="clearPlanetSlots()">🗑 Clear All</button>
       <button class="check-btn" id="check-btn" onclick="checkPlanetOrder()">✅ Check My Order!</button>
     </div>
   </div>
-
+ 
   <!-- ══════════════════════════════════
        PLANET ORDER: RESULTS
   ══════════════════════════════════ -->
@@ -459,18 +568,18 @@
     <h2 id="p-title">Incredible!</h2>
     <div class="planet-score-big" id="p-score">8 / 8</div>
     <p class="result-tagline" id="p-tagline">You know your solar system!</p>
-
+ 
     <p class="correct-order-title">✅ Correct Order</p>
     <div class="correct-order-row" id="correct-order-row"></div>
-
+ 
     <div class="planet-result-btns">
       <button class="try-again-btn" onclick="startPlanetGame()">🔄 Try Again</button>
       <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
     </div>
   </div>
-
+ 
 </div><!-- #app -->
-
+ 
 <script>
 // ══════════════════════════════════════════════
 //  STARS
@@ -485,7 +594,7 @@
     c.appendChild(s);
   }
 })();
-
+ 
 // ══════════════════════════════════════════════
 //  SHARED
 // ══════════════════════════════════════════════
@@ -494,7 +603,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-
+ 
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -503,7 +612,7 @@ function shuffle(arr) {
   }
   return a;
 }
-
+ 
 function launchConfetti() {
   const colors = ['#f9ca24','#f0932b','#eb4d4b','#6c5ce7','#00b894','#00cec9','#a29bfe'];
   for (let i = 0; i < 90; i++) {
@@ -516,8 +625,8 @@ function launchConfetti() {
     }, i * 25);
   }
 }
-
-
+ 
+ 
 // ══════════════════════════════════════════════
 //  TRIVIA GAME
 // ══════════════════════════════════════════════
@@ -583,7 +692,7 @@ const QUESTIONS = {
     { q:"What do magnets have that lets them attract or repel each other?", opts:["Gravity","Poles (north and south)","Charge (positive/negative)","Static electricity"], ans:1, fact:"Opposite poles attract, same poles repel — every magnet has both a north and south pole!" },
   ],
 };
-
+ 
 const LETTERS = ['A','B','C','D'];
 const CAT_INFO = {
   space:   { label:'🪐 Space & Planets', color:'#6c5ce7' },
@@ -593,18 +702,18 @@ const CAT_INFO = {
   physics: { label:'⚡ Forces & Energy',  color:'#fdcb6e' },
   mix:     { label:'🎲 Mixed Bag',        color:'#a29bfe' },
 };
-
+ 
 let selectedCategory = null, questionList = [], currentIndex = 0;
 let score = 0, lives = 3, answered = false;
 let correctCount = 0, wrongCount = 0, currentStreak = 0, bestStreak = 0;
-
+ 
 function selectCategory(btn) {
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedCategory = btn.dataset.cat;
   document.getElementById('start-btn').disabled = false;
 }
-
+ 
 function startGame() {
   score=0; lives=3; currentIndex=0; correctCount=0; wrongCount=0; currentStreak=0; bestStreak=0; answered=false;
   questionList = selectedCategory === 'mix'
@@ -614,7 +723,7 @@ function startGame() {
   showScreen('game-screen');
   renderQuestion();
 }
-
+ 
 function renderQuestion() {
   answered = false;
   const q = questionList[currentIndex];
@@ -641,7 +750,7 @@ function renderQuestion() {
   document.getElementById('next-btn').style.display = 'none';
   document.getElementById('next-btn').textContent = 'Next Question →';
 }
-
+ 
 function handleAnswer(idx) {
   if (answered) return;
   answered = true;
@@ -665,19 +774,19 @@ function handleAnswer(idx) {
   document.getElementById('next-btn').style.display = 'block';
   if (lives <= 0) document.getElementById('next-btn').textContent = 'See Results →';
 }
-
+ 
 function renderLives() {
   let html = '';
   for (let i=0;i<3;i++) html += i < lives ? '❤️' : '🖤';
   document.getElementById('lives-display').innerHTML = html;
 }
-
+ 
 function nextQuestion() {
   currentIndex++;
   if (currentIndex >= questionList.length || lives <= 0) endGame();
   else renderQuestion();
 }
-
+ 
 function endGame() {
   const pct = correctCount / questionList.length;
   let trophy, title, message, stars;
@@ -696,24 +805,24 @@ function endGame() {
   showScreen('end-screen');
   if (pct >= .7) launchConfetti();
 }
-
+ 
 function resetGame() {
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('start-btn').disabled = true;
   selectedCategory = null;
   showScreen('start-screen');
 }
-
+ 
 function guessCat(q) {
   for (const [cat, qs] of Object.entries(QUESTIONS)) { if (qs.includes(q)) return cat; }
   return 'mix';
 }
-
-
+ 
+ 
 // ══════════════════════════════════════════════
 //  PLANET ORDER GAME
 // ══════════════════════════════════════════════
-
+ 
 const PLANETS = [
   { name:'Mercury', order:0, bg:'radial-gradient(circle at 35% 30%, #d4d4d4, #9e9e9e, #616161)', fact:'Closest planet to the Sun! A full year is only 88 Earth days.' },
   { name:'Venus',   order:1, bg:'radial-gradient(circle at 35% 30%, #fff9c4, #f5c518, #b8860b)', fact:'The hottest planet — clouds trap heat like a giant greenhouse!' },
@@ -724,36 +833,38 @@ const PLANETS = [
   { name:'Uranus',  order:6, bg:'radial-gradient(circle at 35% 30%, #b2ebf2, #4dd0e1, #00838f)', fact:'An ice giant that spins almost completely on its side — very unusual!' },
   { name:'Neptune', order:7, bg:'radial-gradient(circle at 35% 30%, #9fa8da, #5c6bc0, #1a237e)', fact:'Farthest planet! One Neptune year lasts 165 Earth years.' },
 ];
-
+ 
 // State
 let pSlots = new Array(8).fill(null); // null | planet name
 let pDragSource = null; // { planet: name, fromSlot: number | -1 (tray) }
 let pChecked = false;
-
+let pTrayOrder = []; // shuffled planet names for tray display
+ 
 // Touch drag state
 let touchDragInfo = null;
 let touchCloneEl = null;
-
+ 
 function startPlanetGame() {
   pSlots = new Array(8).fill(null);
   pDragSource = null;
   pChecked = false;
+  pTrayOrder = shuffle(PLANETS.map(p => p.name));
   showScreen('planet-screen');
   renderPlanetBoard();
 }
-
+ 
 function clearPlanetSlots() {
   pSlots = new Array(8).fill(null);
   pChecked = false;
   renderPlanetBoard();
 }
-
+ 
 // ── Render ──────────────────────────────────
 function renderPlanetBoard() {
   renderSolarRow();
   renderTray();
 }
-
+ 
 function makePlanetBall(p, size) {
   // Returns innerHTML for a planet ball (with ring if Saturn)
   const ring = p.hasRing
@@ -763,23 +874,23 @@ function makePlanetBall(p, size) {
     <div class="p-ball" style="background:${p.bg};width:${size}px;height:${size}px;">${ring}</div>
   </div>`;
 }
-
+ 
 function renderSolarRow() {
   const row = document.getElementById('solar-row');
   row.innerHTML = '';
-
+ 
   // Sun
   const sunDiv = document.createElement('div');
   sunDiv.className = 'sun-icon';
   sunDiv.innerHTML = `<div class="sun-ball"></div><div class="sun-label">SUN</div>`;
   row.appendChild(sunDiv);
-
+ 
   // Orbit dots
   const dots = document.createElement('div');
   dots.className = 'orbit-dots';
   dots.innerHTML = '<div class="orbit-dot"></div><div class="orbit-dot"></div><div class="orbit-dot"></div>';
   row.appendChild(dots);
-
+ 
   // Slots
   pSlots.forEach((planetName, i) => {
     const slot = document.createElement('div');
@@ -789,7 +900,7 @@ function renderSolarRow() {
     slot.ondragleave = () => slot.classList.remove('drag-over');
     slot.ondragenter = e => e.preventDefault();
     slot.ondrop      = e => { e.preventDefault(); slot.classList.remove('drag-over'); dropOnSlot(i); };
-
+ 
     if (planetName) {
       const p = PLANETS.find(pl => pl.name === planetName);
       slot.innerHTML = `<div class="slot-num">${i+1}</div>` + makePlanetBall(p, 46) + `<div class="p-name">${p.name}</div>`;
@@ -811,13 +922,15 @@ function renderSolarRow() {
     row.appendChild(slot);
   });
 }
-
+ 
 function renderTray() {
   const tray = document.getElementById('planet-tray');
   tray.innerHTML = '';
-
-  const inTray = PLANETS.filter(p => !pSlots.includes(p.name));
-
+ 
+  const inTray = pTrayOrder
+    .map(name => PLANETS.find(p => p.name === name))
+    .filter(p => !pSlots.includes(p.name));
+ 
   if (inTray.length === 0) {
     tray.innerHTML = '<div class="tray-placeholder">All planets placed! ✅ Check your order below.</div>';
     document.getElementById('check-btn').disabled = false;
@@ -828,7 +941,7 @@ function renderTray() {
       card.className = 'planet-card';
       card.setAttribute('draggable','true');
       card.innerHTML = makePlanetBall(p, 58) + `<div class="p-name">${p.name}</div>`;
-
+ 
       card.ondragstart = e => {
         pDragSource = { planet: p.name, fromSlot: -1 };
         setTimeout(() => card.classList.add('dragging-ghost'), 0);
@@ -839,21 +952,21 @@ function renderTray() {
       tray.appendChild(card);
     });
   }
-
+ 
   // Tray as drop zone (to return planets)
   tray.ondragover  = e => { e.preventDefault(); tray.classList.add('drag-over-tray'); };
   tray.ondragleave = () => tray.classList.remove('drag-over-tray');
   tray.ondrop      = e => { e.preventDefault(); tray.classList.remove('drag-over-tray'); dropOnTray(); };
 }
-
+ 
 // ── Drop Logic ───────────────────────────────
 function dropOnSlot(slotIdx) {
   if (!pDragSource) return;
   const { planet, fromSlot } = pDragSource;
   const occupant = pSlots[slotIdx];
-
+ 
   if (fromSlot >= 0) pSlots[fromSlot] = null; // clear source slot
-
+ 
   if (occupant !== null) {
     if (fromSlot >= 0) {
       pSlots[fromSlot] = occupant; // swap
@@ -865,7 +978,7 @@ function dropOnSlot(slotIdx) {
   pChecked = false;
   renderPlanetBoard();
 }
-
+ 
 function dropOnTray() {
   if (!pDragSource) return;
   const { fromSlot } = pDragSource;
@@ -874,7 +987,7 @@ function dropOnTray() {
   pChecked = false;
   renderPlanetBoard();
 }
-
+ 
 // ── Touch Drag ───────────────────────────────
 function onTouchDragStart(e, planet, fromSlot) {
   e.preventDefault();
@@ -883,7 +996,7 @@ function onTouchDragStart(e, planet, fromSlot) {
   const touch = e.touches[0];
   const rect = e.currentTarget.getBoundingClientRect();
   touchDragInfo = { offX: touch.clientX - rect.left, offY: touch.clientY - rect.top };
-
+ 
   touchCloneEl = e.currentTarget.cloneNode(true);
   Object.assign(touchCloneEl.style, {
     position:'fixed', left:rect.left+'px', top:rect.top+'px',
@@ -893,7 +1006,7 @@ function onTouchDragStart(e, planet, fromSlot) {
   });
   document.body.appendChild(touchCloneEl);
 }
-
+ 
 document.addEventListener('touchmove', e => {
   if (!touchCloneEl) return;
   e.preventDefault();
@@ -901,18 +1014,18 @@ document.addEventListener('touchmove', e => {
   touchCloneEl.style.left = (touch.clientX - (touchDragInfo?.offX || 0)) + 'px';
   touchCloneEl.style.top  = (touch.clientY - (touchDragInfo?.offY || 0)) + 'px';
 }, { passive: false });
-
+ 
 document.addEventListener('touchend', e => {
   if (!pDragSource || !touchCloneEl) return;
   touchCloneEl.remove(); touchCloneEl = null;
-
+ 
   const touch = e.changedTouches[0];
   const el = document.elementFromPoint(touch.clientX, touch.clientY);
   if (!el) { pDragSource = null; return; }
-
+ 
   const slotEl = el.closest('.p-slot');
   const trayEl = el.closest('#planet-tray');
-
+ 
   if (slotEl) {
     dropOnSlot(parseInt(slotEl.dataset.slotIdx));
   } else if (trayEl) {
@@ -922,7 +1035,7 @@ document.addEventListener('touchend', e => {
   }
   touchDragInfo = null;
 }, { passive: false });
-
+ 
 // ── Check Order ──────────────────────────────
 function checkPlanetOrder() {
   // Check how many are placed and correct
@@ -933,9 +1046,9 @@ function checkPlanetOrder() {
       if (p && p.order === i) correct++;
     }
   });
-
+ 
   const placed = pSlots.filter(s => s !== null).length;
-
+ 
   // Show results
   let trophy, title, tagline;
   if (correct === 8 && placed === 8) {
@@ -948,12 +1061,12 @@ function checkPlanetOrder() {
   } else {
     trophy = '🔬'; title = 'Keep Learning!'; tagline = `${correct} out of 8 correct — check the correct order below!`;
   }
-
+ 
   document.getElementById('p-trophy').textContent = trophy;
   document.getElementById('p-title').textContent = title;
   document.getElementById('p-score').textContent = `${correct} / 8`;
   document.getElementById('p-tagline').textContent = tagline;
-
+ 
   // Build correct order row
   const crow = document.getElementById('correct-order-row');
   crow.innerHTML = '';
@@ -974,9 +1087,12 @@ function checkPlanetOrder() {
     `;
     crow.appendChild(div);
   });
-
+ 
   showScreen('planet-result-screen');
 }
 </script>
 </body>
 </html>
+ 
+
+
