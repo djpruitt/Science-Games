@@ -6,9 +6,9 @@
 <title>Science Explorer 🔬</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
- 
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   body {
     font-family: 'Nunito', sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -19,16 +19,16 @@
     padding: 20px;
     overflow-x: hidden;
   }
- 
+
   .stars { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
   .star { position:absolute; background:white; border-radius:50%; animation:twinkle 3s infinite; }
   @keyframes twinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
- 
+
   #app { position:relative; z-index:1; width:100%; max-width:720px; }
- 
+
   .screen { display:none; }
   .screen.active { display:block; }
- 
+
   /* ── SHARED CARD ── */
   .card {
     background: rgba(255,255,255,0.05);
@@ -37,7 +37,7 @@
     border: 2px solid rgba(255,255,255,0.1);
     padding: 40px 36px;
   }
- 
+
   /* ── BACK BUTTON ── */
   .back-btn {
     background: rgba(255,255,255,0.08);
@@ -54,7 +54,7 @@
     display: inline-block;
   }
   .back-btn:hover { background: rgba(255,255,255,0.15); color: white; }
- 
+
   /* ═══════════════════════════════════════════
      MENU SCREEN
   ═══════════════════════════════════════════ */
@@ -68,7 +68,7 @@
     margin-bottom: 6px;
   }
   #menu-screen .tagline { color: rgba(255,255,255,0.6); font-size: 1.05em; margin-bottom: 35px; }
- 
+
   .game-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .game-card {
     background: rgba(255,255,255,0.07);
@@ -88,7 +88,7 @@
   .game-card.trivia-card:hover { border-color: #f9ca24; box-shadow: 0 16px 40px rgba(249,202,36,0.2); }
   .game-card.planet-card { border-color: rgba(108,92,231,0.3); }
   .game-card.planet-card:hover { border-color: #a29bfe; box-shadow: 0 16px 40px rgba(108,92,231,0.2); }
- 
+
   /* ═══════════════════════════════════════════
      TRIVIA – START SCREEN
   ═══════════════════════════════════════════ */
@@ -101,7 +101,7 @@
     margin-bottom: 6px;
   }
   #start-screen p { color: rgba(255,255,255,0.7); font-size: 1em; margin-bottom: 24px; }
- 
+
   .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
   .cat-btn {
     background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
@@ -112,7 +112,26 @@
   .cat-btn:hover { background: rgba(255,255,255,0.18); transform: translateY(-3px); }
   .cat-btn.selected { border-color: #f9ca24; background: rgba(249,202,36,0.2); box-shadow: 0 0 20px rgba(249,202,36,0.3); }
   .cat-btn .cat-icon { font-size: 1.8em; display:block; margin-bottom: 5px; }
- 
+
+  /* Grade toggle */
+  .grade-toggle { display:flex; gap:8px; justify-content:center; margin-bottom:18px; }
+  .grade-btn {
+    background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.15);
+    border-radius: 50px; padding: 9px 22px; cursor: pointer;
+    color: rgba(255,255,255,.65); font-family: 'Nunito',sans-serif;
+    font-size: .95em; font-weight: 700; transition: all .2s;
+  }
+  .grade-btn:hover { background: rgba(255,255,255,.13); color: white; }
+  .grade-btn.grade-elem.active  { background: rgba(249,202,36,.2);  border-color: #f9ca24;  color: #f9ca24;  }
+  .grade-btn.grade-8th.active   { background: rgba(0,206,201,.2);   border-color: #00cec9;  color: #00cec9;  }
+  .grade-btn.grade-9th.active   { background: rgba(108,92,231,.25); border-color: #a29bfe;  color: #a29bfe;  }
+  .grade-badge-9th {
+    display: inline-block; background: rgba(108,92,231,.25);
+    border: 1px solid rgba(162,155,254,.5); border-radius: 20px;
+    padding: 3px 12px; font-size: .75em; color: #a29bfe; font-weight: 900;
+    margin-left: 8px; vertical-align: middle;
+  }
+
   .start-btn {
     background: linear-gradient(135deg, #f9ca24, #f0932b); border: none;
     border-radius: 50px; padding: 16px 46px;
@@ -122,7 +141,7 @@
   }
   .start-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(249,202,36,0.5); }
   .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
- 
+
   /* ── TRIVIA GAME SCREEN ── */
   #game-screen { }
   .hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
@@ -145,7 +164,7 @@
   .feedback-box.hidden { background:transparent; border:2px solid transparent; color:transparent; }
   .next-btn { width:100%; background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:14px; padding:14px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; margin-top:12px; transition:all .2s; display:none; }
   .next-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(108,92,231,.4); }
- 
+
   /* ── TRIVIA END SCREEN ── */
   #end-screen { text-align:center; }
   .trophy { font-size:72px; margin-bottom:8px; }
@@ -162,24 +181,24 @@
   .play-again-btn:hover { transform:translateY(-3px) scale(1.03); }
   .menu-btn-sm { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.2); border-radius:50px; padding:14px 28px; font-family:'Nunito',sans-serif; font-size:1.05em; font-weight:700; color:white; cursor:pointer; transition:all .2s; }
   .menu-btn-sm:hover { background:rgba(255,255,255,.15); }
- 
+
   /* ── CONFETTI ── */
   .confetti-piece { position:fixed; width:10px; height:10px; border-radius:2px; top:-20px; animation:fall linear forwards; z-index:999; pointer-events:none; }
   @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
   @keyframes pulse-correct { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
   .pulse { animation:pulse-correct .35s ease; }
- 
- 
+
+
   /* ═══════════════════════════════════════════
      PLANET ORDER GAME
   ═══════════════════════════════════════════ */
- 
+
   #planet-screen { }
- 
+
   .planet-header { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
   .planet-header h2 { font-size:1.5em; font-weight:900; color:white; }
   .planet-subhead { color:rgba(255,255,255,.55); font-size:.9em; margin-bottom:22px; }
- 
+
   /* Solar system row */
   .solar-row-wrap { overflow-x:auto; padding-bottom:8px; margin-bottom:18px; }
   .solar-row {
@@ -189,7 +208,7 @@
     min-width: max-content;
     padding: 10px 4px;
   }
- 
+
   /* Sun */
   .sun-icon {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -202,11 +221,11 @@
     flex-shrink: 0;
   }
   .sun-label { font-size: .65em; color: rgba(255,255,255,.5); font-weight: 700; }
- 
+
   /* Orbit line dots */
   .orbit-dots { display: flex; flex-direction: column; gap: 3px; align-self: center; }
   .orbit-dot { width: 3px; height: 3px; background: rgba(255,255,255,.2); border-radius: 50%; }
- 
+
   /* Drop slots */
   .p-slot {
     width: 68px; min-height: 88px; flex-shrink: 0;
@@ -225,13 +244,13 @@
   }
   .p-slot.correct-slot { border-color: #00d264 !important; background: rgba(0,210,100,.12) !important; }
   .p-slot.wrong-slot   { border-color: #eb4d4b !important; background: rgba(235,77,77,.12) !important; }
- 
+
   .slot-num {
     font-size: .65em; font-weight: 900; color: rgba(255,255,255,.35);
     margin-bottom: 4px;
   }
   .slot-empty-icon { font-size: 1.4em; opacity: .25; margin-top: 6px; }
- 
+
   /* Planet cards (in slot or tray) */
   .planet-card {
     display: flex; flex-direction: column; align-items: center; gap: 5px;
@@ -240,17 +259,17 @@
   }
   .planet-card:active { cursor: grabbing; transform: scale(1.08); }
   .planet-card.dragging-ghost { opacity: .35; }
- 
+
   /* Planet ball in slot: fixed display size */
   .p-slot .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   .p-slot .p-ball { width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0; }
   .p-slot .p-name { font-size: .62em; font-weight: 900; color: rgba(255,255,255,.8); text-align: center; line-height: 1.1; }
- 
+
   /* Planet cards in tray: bigger */
   #planet-tray .planet-ball-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   #planet-tray .p-ball { width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0; }
   #planet-tray .p-name { font-size: .72em; font-weight: 900; color: rgba(255,255,255,.85); text-align: center; }
- 
+
   /* Saturn ring */
   .saturn-ring {
     position: absolute;
@@ -262,7 +281,7 @@
     z-index: 2;
   }
   .p-slot .saturn-ring { border-width: 2px; }
- 
+
   /* Planet tray */
   #planet-tray {
     background: rgba(255,255,255,.04);
@@ -281,7 +300,7 @@
   #planet-tray .tray-placeholder {
     color: rgba(255,255,255,.25); font-size: .9em; font-weight: 700; font-style: italic;
   }
- 
+
   /* Planet game action buttons */
   .planet-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .check-btn {
@@ -297,21 +316,21 @@
     color: rgba(255,255,255,.7); cursor: pointer; transition: all .2s;
   }
   .clear-btn:hover { background: rgba(255,255,255,.14); color: white; }
- 
+
   /* Slot labels row */
   .slot-labels-row {
     display: flex; justify-content: space-between;
     padding: 0 4px; margin-bottom: 6px;
     color: rgba(255,255,255,.3); font-size: .75em; font-weight: 700;
   }
- 
+
   /* ── PLANET RESULT SCREEN ── */
   #planet-result-screen { text-align: center; }
   #planet-result-screen .trophy { font-size:66px; margin-bottom:8px; }
   #planet-result-screen h2 { font-size:2em; font-weight:900; color:white; margin-bottom:4px; }
   .planet-score-big { font-size:3.4em; font-weight:900; background:linear-gradient(90deg,#a29bfe,#6c5ce7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin:8px 0; }
   .result-tagline { color:rgba(255,255,255,.6); font-size:1em; margin-bottom:22px; }
- 
+
   .correct-order-title { font-size:.9em; font-weight:900; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; }
   .correct-order-row {
     display: flex; align-items: center; gap: 6px; overflow-x: auto;
@@ -326,18 +345,18 @@
   .co-name { font-size:.62em; font-weight:900; color:rgba(255,255,255,.75); text-align:center; }
   .co-check { font-size:.9em; }
   .co-arrow { color:rgba(255,255,255,.2); font-size:.9em; align-self:center; flex-shrink:0; }
- 
+
   .planet-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
   .try-again-btn { background:linear-gradient(135deg,#6c5ce7,#a29bfe); border:none; border-radius:50px; padding:14px 36px; font-family:'Nunito',sans-serif; font-size:1.1em; font-weight:900; color:white; cursor:pointer; transition:all .2s; box-shadow:0 6px 20px rgba(108,92,231,.4); }
   .try-again-btn:hover { transform:translateY(-2px); }
 </style>
 </head>
 <body>
- 
+
 <div class="stars" id="stars"></div>
- 
+
 <div id="app">
- 
+
   <!-- ══════════════════════════════════
        MENU SCREEN
   ══════════════════════════════════ -->
@@ -358,7 +377,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- ══════════════════════════════════
        TRIVIA: CATEGORY PICKER
   ══════════════════════════════════ -->
@@ -367,19 +386,21 @@
     <div style="text-align:center">
       <div class="logo">🔬</div>
       <h1>Science Trivia</h1>
-      <p>Pick a category and test your smarts!</p>
-      <div class="category-grid">
-        <button class="cat-btn" data-cat="space" onclick="selectCategory(this)"><span class="cat-icon">🪐</span>Space & Planets</button>
-        <button class="cat-btn" data-cat="animals" onclick="selectCategory(this)"><span class="cat-icon">🦁</span>Animals</button>
-        <button class="cat-btn" data-cat="body" onclick="selectCategory(this)"><span class="cat-icon">🫀</span>Human Body</button>
-        <button class="cat-btn" data-cat="nature" onclick="selectCategory(this)"><span class="cat-icon">🌿</span>Nature & Plants</button>
-        <button class="cat-btn" data-cat="physics" onclick="selectCategory(this)"><span class="cat-icon">⚡</span>Forces & Energy</button>
-        <button class="cat-btn" data-cat="mix" onclick="selectCategory(this)"><span class="cat-icon">🎲</span>Mixed Bag!</button>
+      <p>Pick a grade level and category!</p>
+
+      <div class="grade-toggle">
+        <button class="grade-btn grade-elem active" id="grade-elem-btn" onclick="setGrade('elementary', this)">🌱 Elementary</button>
+        <button class="grade-btn grade-8th" id="grade-8th-btn" onclick="setGrade('8th', this)">📚 8th Grade</button>
+        <button class="grade-btn grade-9th" id="grade-9th-btn" onclick="setGrade('9th', this)">🎓 9th Grade</button>
+      </div>
+
+      <div class="category-grid" id="category-grid">
+        <!-- populated by JS based on grade level -->
       </div>
       <button class="start-btn" id="start-btn" onclick="startGame()" disabled>🚀 Start Playing!</button>
     </div>
   </div>
- 
+
   <!-- ══════════════════════════════════
        TRIVIA: GAMEPLAY
   ══════════════════════════════════ -->
@@ -396,7 +417,7 @@
     <div class="feedback-box hidden" id="feedback-box"></div>
     <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question →</button>
   </div>
- 
+
   <!-- ══════════════════════════════════
        TRIVIA: RESULTS
   ══════════════════════════════════ -->
@@ -416,7 +437,7 @@
       <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
     </div>
   </div>
- 
+
   <!-- ══════════════════════════════════
        PLANET ORDER: GAME
   ══════════════════════════════════ -->
@@ -427,30 +448,30 @@
       <h2>Planet Order Challenge</h2>
     </div>
     <p class="planet-subhead">Drag the planets into the correct order from the Sun — closest first!</p>
- 
+
     <div class="slot-labels-row">
       <span>☀️ Closest to Sun</span>
       <span>Farthest from Sun 🌌</span>
     </div>
- 
+
     <!-- Scrollable solar system row -->
     <div class="solar-row-wrap">
       <div class="solar-row" id="solar-row">
         <!-- Built by JS -->
       </div>
     </div>
- 
+
     <p style="color:rgba(255,255,255,.35);font-size:.8em;text-align:center;margin-bottom:10px">⬆ Drop planets here &nbsp;|&nbsp; Drag from tray below ⬇</p>
- 
+
     <!-- Tray -->
     <div id="planet-tray"></div>
- 
+
     <div class="planet-actions">
       <button class="clear-btn" onclick="clearPlanetSlots()">🗑 Clear All</button>
       <button class="check-btn" id="check-btn" onclick="checkPlanetOrder()">✅ Check My Order!</button>
     </div>
   </div>
- 
+
   <!-- ══════════════════════════════════
        PLANET ORDER: RESULTS
   ══════════════════════════════════ -->
@@ -459,18 +480,18 @@
     <h2 id="p-title">Incredible!</h2>
     <div class="planet-score-big" id="p-score">8 / 8</div>
     <p class="result-tagline" id="p-tagline">You know your solar system!</p>
- 
+
     <p class="correct-order-title">✅ Correct Order</p>
     <div class="correct-order-row" id="correct-order-row"></div>
- 
+
     <div class="planet-result-btns">
       <button class="try-again-btn" onclick="startPlanetGame()">🔄 Try Again</button>
       <button class="menu-btn-sm" onclick="showScreen('menu-screen')">🏠 Menu</button>
     </div>
   </div>
- 
+
 </div><!-- #app -->
- 
+
 <script>
 // ══════════════════════════════════════════════
 //  STARS
@@ -485,7 +506,7 @@
     c.appendChild(s);
   }
 })();
- 
+
 // ══════════════════════════════════════════════
 //  SHARED
 // ══════════════════════════════════════════════
@@ -494,7 +515,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
- 
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -503,7 +524,7 @@ function shuffle(arr) {
   }
   return a;
 }
- 
+
 function launchConfetti() {
   const colors = ['#f9ca24','#f0932b','#eb4d4b','#6c5ce7','#00b894','#00cec9','#a29bfe'];
   for (let i = 0; i < 90; i++) {
@@ -516,8 +537,8 @@ function launchConfetti() {
     }, i * 25);
   }
 }
- 
- 
+
+
 // ══════════════════════════════════════════════
 //  TRIVIA GAME
 // ══════════════════════════════════════════════
@@ -583,8 +604,141 @@ const QUESTIONS = {
     { q:"What do magnets have that lets them attract or repel each other?", opts:["Gravity","Poles (north and south)","Charge (positive/negative)","Static electricity"], ans:1, fact:"Opposite poles attract, same poles repel — every magnet has both a north and south pole!" },
   ],
 };
- 
+
+// ══════════════════════════════════════════════
+//  9TH GRADE QUESTION BANK
+// ══════════════════════════════════════════════
+const QUESTIONS_9TH = {
+  space: [
+    { q:"What type of star will our Sun eventually become after its main-sequence phase?", opts:["Neutron star","Black hole","Red giant","Blue supergiant"], ans:2, fact:"After exhausting its hydrogen fuel, the Sun will expand into a red giant in about 5 billion years." },
+    { q:"What is a light-year?", opts:["The time light takes to reach Earth from the Sun","The distance light travels in one year","The speed of light per second","One trillion kilometers"], ans:1, fact:"One light-year is about 9.46 trillion kilometers — it measures distance, not time!" },
+    { q:"What causes a solar eclipse?", opts:["Earth passes between the Sun and Moon","The Moon passes between Earth and the Sun","The Sun moves behind Earth","Earth's shadow covers the Moon"], ans:1, fact:"A total solar eclipse occurs when the Moon perfectly blocks the Sun from view on Earth." },
+    { q:"What is the approximate age of our Solar System?", opts:["1 billion years","2.5 billion years","4.6 billion years","13.8 billion years"], ans:2, fact:"The Solar System formed about 4.6 billion years ago from a collapsing cloud of gas and dust." },
+    { q:"What is the event horizon of a black hole?", opts:["The outer atmosphere","The photosphere","The boundary beyond which nothing can escape","The accretion disk"], ans:2, fact:"Beyond the event horizon, even light cannot escape the black hole's gravitational pull." },
+    { q:"What is the term for the point in a planet's orbit closest to the Sun?", opts:["Aphelion","Perihelion","Solstice","Zenith"], ans:1, fact:"Earth reaches perihelion in early January — we're actually closest to the Sun in winter!" },
+    { q:"What is redshift used to determine in astronomy?", opts:["A star's temperature","A galaxy's chemical composition","Whether an object is moving away from us","The size of a star"], ans:2, fact:"As objects move away, light waves stretch to longer (redder) wavelengths — this is the Doppler effect for light." },
+    { q:"The observable universe is approximately how old?", opts:["4.6 billion years","8 billion years","13.8 billion years","20 billion years"], ans:2, fact:"The Big Bang occurred about 13.8 billion years ago, making the observable universe that old." },
+    { q:"What is nuclear fusion in stars?", opts:["Splitting heavy atoms to release energy","Combining hydrogen atoms to form helium and release energy","Burning gas at high temperatures","Magnetic field reactions"], ans:1, fact:"Stars like the Sun fuse hydrogen into helium in their cores, releasing enormous amounts of energy." },
+    { q:"What is the Hertzsprung-Russell diagram used for?", opts:["Mapping the solar system","Classifying stars by temperature and luminosity","Tracking planetary orbits","Measuring galaxy distances"], ans:1, fact:"The H-R diagram plots stars by brightness vs. temperature, revealing their life stages." },
+  ],
+  animals: [
+    { q:"What is the process by which cells divide to produce two genetically identical daughter cells?", opts:["Meiosis","Mitosis","Osmosis","Binary fission"], ans:1, fact:"Mitosis is used for growth and repair — meiosis produces sex cells with half the chromosomes." },
+    { q:"What molecule carries the genetic instructions for all living organisms?", opts:["RNA","ATP","DNA","Protein"], ans:2, fact:"DNA (deoxyribonucleic acid) stores genetic information in a double-helix structure." },
+    { q:"What are the four nitrogenous bases in DNA?", opts:["Glucose, Fructose, Sucrose, Maltose","Oxygen, Hydrogen, Carbon, Nitrogen","Adenine, Thymine, Guanine, Cytosine","Lipids, Proteins, Carbs, Nucleic acids"], ans:2, fact:"Adenine pairs with Thymine, and Guanine pairs with Cytosine — the base-pairing rules!" },
+    { q:"What is natural selection?", opts:["Humans selecting the best crops","Random mutations only","The process where better-adapted organisms survive and reproduce more","Animals choosing their mates"], ans:2, fact:"Darwin's theory: individuals with favorable traits are more likely to survive and pass on genes." },
+    { q:"What is a phenotype?", opts:["The genetic code of an organism","The observable traits of an organism","A type of cell division","A sequence in DNA"], ans:1, fact:"Phenotype is what you can see or measure — like eye color or height. Genotype is the underlying DNA." },
+    { q:"What is the function of ribosomes?", opts:["Control cell division","Synthesize (make) proteins","Produce ATP energy","Store water and nutrients"], ans:1, fact:"Ribosomes read mRNA instructions and assemble amino acids into proteins." },
+    { q:"What is an organism's complete set of genetic information called?", opts:["Genome","Chromosome","Allele","Gene"], ans:0, fact:"The human genome contains about 3 billion base pairs and approximately 20,000–25,000 genes." },
+    { q:"What is the difference between mitosis and meiosis?", opts:["Mitosis produces 4 cells; meiosis produces 2","Mitosis produces 2 identical cells; meiosis produces 4 sex cells with half the DNA","They are the same process","Mitosis only occurs in plants"], ans:1, fact:"Meiosis produces gametes (sperm/eggs) with 23 chromosomes; mitosis keeps the full set of 46." },
+    { q:"Which organelle is known as the 'powerhouse of the cell'?", opts:["Nucleus","Ribosome","Mitochondria","Vacuole"], ans:2, fact:"Mitochondria perform cellular respiration, converting glucose into ATP energy the cell can use." },
+    { q:"What is the central dogma of molecular biology?", opts:["Cells come from pre-existing cells","DNA → RNA → Protein","Energy cannot be created or destroyed","Traits are inherited from parents"], ans:1, fact:"Genetic information flows from DNA (transcription) to RNA to protein (translation)." },
+  ],
+  body: [
+    { q:"What type of blood vessel carries oxygenated blood away from the heart?", opts:["Veins","Capillaries","Arteries","Lymph vessels"], ans:2, fact:"Arteries carry blood away from the heart (usually oxygenated). Veins return blood to the heart." },
+    { q:"What is homeostasis?", opts:["The study of hormones","The body maintaining stable internal conditions","Only blood pressure regulation","The immune response to infection"], ans:1, fact:"Homeostasis keeps things like body temperature, blood sugar, and pH within narrow ranges." },
+    { q:"Which part of the brain controls balance and coordination?", opts:["Cerebrum","Medulla oblongata","Hypothalamus","Cerebellum"], ans:3, fact:"The cerebellum fine-tunes movement and maintains balance — athletes rely heavily on it." },
+    { q:"What are neurotransmitters?", opts:["Electrical signals traveling down nerves","Chemical messengers that cross synapses between neurons","Types of white blood cells","Hormones produced by the brain stem"], ans:1, fact:"Examples include dopamine, serotonin, and acetylcholine — they control mood, movement, and more." },
+    { q:"What process do cells use to produce ATP from glucose?", opts:["Photosynthesis","Fermentation","Cellular respiration","Diffusion"], ans:2, fact:"The equation: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP. Most ATP is made in the mitochondria." },
+    { q:"What is the role of the endocrine system?", opts:["Circulate blood","Coordinate movement","Produce and release hormones into the bloodstream","Filter waste from the kidneys"], ans:2, fact:"Glands like the thyroid, adrenal, and pituitary produce hormones that regulate growth, metabolism, and more." },
+    { q:"What is an action potential?", opts:["The gap between two neurons","The electrical signal traveling along a neuron","The resting state of a cell","A reflex response"], ans:1, fact:"An action potential is an all-or-nothing electrical impulse — neurons either fire completely or not at all." },
+    { q:"What is the function of platelets in blood?", opts:["Carry oxygen","Fight bacterial infections","Clot blood to stop bleeding","Produce hormones"], ans:2, fact:"Platelets (thrombocytes) clump at wound sites and release chemicals that trigger the clotting cascade." },
+    { q:"What is the difference between a motor neuron and a sensory neuron?", opts:["They are the same","Motor neurons carry signals to muscles; sensory neurons carry signals to the brain","Motor neurons are only in the brain","Sensory neurons cause muscle movement"], ans:1, fact:"Sensory neurons bring information in; motor neurons send commands out to muscles and glands." },
+    { q:"What organ produces insulin, and what does insulin do?", opts:["Liver — breaks down toxins","Pancreas — lowers blood glucose by helping cells absorb it","Kidney — filters blood sugar","Adrenal gland — raises blood pressure"], ans:1, fact:"Without insulin (as in Type 1 diabetes), cells can't absorb glucose even when blood sugar is high." },
+  ],
+  nature: [
+    { q:"What is the pH of a neutral substance?", opts:["0","3","7","14"], ans:2, fact:"pH 7 is neutral (pure water). Below 7 is acidic; above 7 is basic (alkaline)." },
+    { q:"What drives tectonic plate movement?", opts:["Earth's rotation","Solar wind pressure","Convection currents in the mantle","The Moon's gravity"], ans:2, fact:"Hot mantle rock rises, spreads, cools, and sinks — these convection cells drag the plates along." },
+    { q:"What is the law of conservation of mass?", opts:["Mass can be created but not destroyed","Mass always increases in reactions","In a chemical reaction, total mass of reactants equals total mass of products","Heavy objects fall faster"], ans:2, fact:"Discovered by Lavoisier: atoms are rearranged in reactions, not created or destroyed." },
+    { q:"What is the difference between a physical and chemical change?", opts:["Physical changes are always irreversible","Chemical changes create new substances; physical changes do not","They are the same thing","Chemical changes only happen in labs"], ans:1, fact:"Melting ice is physical (still water). Burning wood is chemical (new substances: ash, CO₂, water vapor)." },
+    { q:"What is an exothermic reaction?", opts:["A reaction that absorbs energy from surroundings","A reaction that releases energy as heat","A reaction that requires light to proceed","A very slow reaction"], ans:1, fact:"Combustion, respiration, and hand-warmer packets are all exothermic — they release heat." },
+    { q:"What is the carbon cycle?", opts:["The orbit of carbon atoms in space","The movement of carbon through living organisms, atmosphere, oceans, and Earth","A type of chemical reaction","How plants absorb carbon dioxide only"], ans:1, fact:"Carbon cycles through photosynthesis, respiration, decomposition, and combustion." },
+    { q:"What type of rock is formed by heat and pressure deep underground without melting?", opts:["Igneous","Sedimentary","Metamorphic","Volcanic"], ans:2, fact:"Marble (from limestone) and slate (from shale) are classic metamorphic rocks formed under pressure." },
+    { q:"What is the greenhouse effect?", opts:["Growing plants in glass greenhouses","Greenhouse gases trapping heat in Earth's atmosphere","A type of solar energy panel","Ozone layer blocking UV light"], ans:1, fact:"CO₂, methane, and water vapor absorb outgoing infrared radiation, keeping Earth warm enough for life." },
+    { q:"What is nitrogen fixation?", opts:["Plants absorbing nitrogen from rain","Bacteria converting atmospheric N₂ into usable ammonia/nitrates","Decomposers breaking down proteins","Animals exhaling nitrogen gas"], ans:1, fact:"Nitrogen-fixing bacteria (like Rhizobium in plant roots) make nitrogen available to living things." },
+    { q:"What is the difference between a producer and a consumer in an ecosystem?", opts:["Producers eat plants; consumers eat animals","Producers make their own food via photosynthesis; consumers eat other organisms","They are the same","Producers are only found in oceans"], ans:1, fact:"Plants are producers; herbivores are primary consumers; carnivores are secondary/tertiary consumers." },
+  ],
+  physics: [
+    { q:"What is Newton's Second Law of Motion?", opts:["Objects in motion stay in motion unless acted on by force","For every action there is an equal and opposite reaction","Force equals mass times acceleration (F = ma)","Speed equals distance divided by time"], ans:2, fact:"F = ma means doubling the mass requires double the force to produce the same acceleration." },
+    { q:"What is the difference between speed and velocity?", opts:["They are exactly the same","Speed is always faster","Velocity includes direction; speed does not","Speed includes direction; velocity does not"], ans:2, fact:"Speed is a scalar (magnitude only); velocity is a vector (magnitude + direction)." },
+    { q:"What is the atomic number of an element?", opts:["The number of neutrons","The number of protons in the nucleus","The total number of particles","The atomic mass"], ans:1, fact:"The atomic number defines the element — carbon always has 6 protons, oxygen always has 8." },
+    { q:"What is Ohm's Law?", opts:["V = IR (Voltage = Current × Resistance)","F = ma","E = mc²","P = mv"], ans:0, fact:"Ohm's Law: if resistance doubles, current halves (with the same voltage)." },
+    { q:"What type of wave does NOT require a medium to travel?", opts:["Sound waves","Water waves","Electromagnetic waves","Seismic waves"], ans:2, fact:"Light, radio waves, X-rays, and microwaves are all electromagnetic — they travel through the vacuum of space." },
+    { q:"What is conservation of momentum?", opts:["Objects always speed up over time","Total momentum in a closed system remains constant","Faster objects always have more momentum","Momentum equals force times distance"], ans:1, fact:"When two billiard balls collide, total momentum before = total momentum after." },
+    { q:"What is the difference between an acid and a base?", opts:["Acids are wet; bases are dry","Acids donate H⁺ ions; bases accept H⁺ (or donate OH⁻)","Acids are always more dangerous","There is no practical difference"], ans:1, fact:"Stomach acid (HCl) donates H⁺; baking soda (NaHCO₃) neutralizes it by accepting H⁺." },
+    { q:"What is the formula for kinetic energy?", opts:["KE = mgh","KE = Fd","KE = ½mv²","KE = mv"], ans:2, fact:"KE = ½mv² — doubling speed quadruples kinetic energy because velocity is squared!" },
+    { q:"What is the difference between a compound and a mixture?", opts:["They are the same thing","A compound is chemically bonded in fixed ratios; a mixture is not chemically combined","A mixture is chemically bonded; a compound is not","Compounds are always solids"], ans:1, fact:"Water (H₂O) is a compound — always 2:1 hydrogen to oxygen. Saltwater is a mixture — proportions vary." },
+    { q:"What is an isotope?", opts:["Atoms of different elements with the same mass number","Atoms of the same element with different numbers of neutrons","Positively charged atoms","Atoms that have lost electrons"], ans:1, fact:"Carbon-12 and Carbon-14 are isotopes — both have 6 protons, but C-14 has 2 extra neutrons." },
+  ],
+};
+
+// ══════════════════════════════════════════════
+//  8TH GRADE QUESTION BANK
+// ══════════════════════════════════════════════
+const QUESTIONS_8TH = {
+  space: [
+    { q:"What causes Earth to have seasons?", opts:["Earth gets closer to the Sun in summer","Earth's 23.5° axial tilt as it orbits the Sun","The Moon blocks some sunlight","Changes in the Sun's energy output"], ans:1, fact:"Earth is actually slightly closer to the Sun in winter (Northern Hemisphere) — seasons are all about the tilt!" },
+    { q:"What is the difference between Earth's rotation and revolution?", opts:["They are the same thing","Rotation is spinning on its axis (1 day); revolution is orbiting the Sun (1 year)","Rotation takes a year; revolution takes a day","Rotation is orbiting the Moon"], ans:1, fact:"Earth rotates once every ~24 hours and completes one revolution around the Sun every 365.25 days." },
+    { q:"What causes ocean tides on Earth?", opts:["Wind patterns over the ocean","Earth's rotation speed","The Moon's gravitational pull on Earth's oceans","Changes in ocean temperature"], ans:2, fact:"The Moon's gravity pulls ocean water toward it, creating bulges. The Sun also has a smaller tidal effect." },
+    { q:"What is the difference between a meteoroid, meteor, and meteorite?", opts:["They are three names for the same object","Meteoroid is in space; meteor glows entering the atmosphere; meteorite reaches Earth's surface","Meteorite is in space; meteor hits the ground","They differ only in size"], ans:1, fact:"The glowing streak you see (a 'shooting star') is a meteor — most burn up before reaching the ground." },
+    { q:"Why does the Moon appear to change shape throughout the month?", opts:["The Moon actually physically changes shape","Clouds cover different parts of it","We see different portions of the Moon's sunlit surface as it orbits Earth","The Sun casts different shadows on it"], ans:2, fact:"The Moon itself doesn't change — its orbit puts different amounts of its lit side in our view." },
+    { q:"What is the Big Bang Theory?", opts:["A theory about how the Moon formed","The universe began from an extremely hot, dense point and has been expanding ever since","How stars explode at the end of their lives","How galaxies collide and merge"], ans:1, fact:"Evidence includes the expansion of galaxies away from us and the cosmic microwave background radiation." },
+    { q:"What is an asteroid belt?", opts:["A ring of ice at the edge of our Solar System","A region between Mars and Jupiter containing millions of rocky objects","Saturn's ring system","The boundary of our Solar System"], ans:1, fact:"The asteroid belt contains over a million asteroids, but their total mass is less than that of our Moon." },
+    { q:"What makes a star different from a planet?", opts:["Stars are always bigger than planets","Stars produce their own light and heat through nuclear fusion; planets do not","Planets are always hotter than stars","Stars never move in the sky"], ans:1, fact:"Jupiter is massive, but still 80× too small to trigger nuclear fusion — the process that powers stars." },
+    { q:"What is a light-year?", opts:["One year traveling at the speed of light","The distance light travels in one year (~9.46 trillion km)","How old a star is","The brightness of a star"], ans:1, fact:"The nearest star system, Alpha Centauri, is about 4.2 light-years away — over 40 trillion kilometers!" },
+    { q:"What is the difference between a solar eclipse and a lunar eclipse?", opts:["They are the same event","Solar: Moon between Earth and Sun; Lunar: Earth between Sun and Moon","Solar: Earth between Moon and Sun; Lunar: Moon between Earth and Sun","They differ only in brightness"], ans:1, fact:"A lunar eclipse turns the Moon red ('blood moon') as it passes through Earth's shadow." },
+  ],
+  animals: [
+    { q:"What is the key difference between a plant cell and an animal cell?", opts:["Plant cells have a nucleus; animal cells do not","Plant cells have a cell wall and chloroplasts; animal cells do not","Animal cells are always smaller","There is no structural difference"], ans:1, fact:"The cell wall gives plants rigidity; chloroplasts are where photosynthesis happens — animal cells have neither." },
+    { q:"What are chromosomes?", opts:["Tiny structures that produce energy","Thread-like structures in the nucleus containing DNA","Components of the cell wall","Types of proteins made by ribosomes"], ans:1, fact:"Humans have 46 chromosomes (23 pairs) — you inherited 23 from each parent." },
+    { q:"What is the difference between an inherited trait and an acquired trait?", opts:["They are the same thing","Inherited traits come from your DNA; acquired traits are gained during your lifetime","Acquired traits come from DNA","Inherited traits can be changed by exercise"], ans:1, fact:"Eye color and blood type are inherited; a scar or speaking a second language are acquired traits." },
+    { q:"What is an adaptation?", opts:["A change in behavior only","A feature that helps an organism survive and reproduce in its environment","When animals migrate south","Learning a new survival skill"], ans:1, fact:"Polar bears' white fur (camouflage), thick fat (insulation), and sharp claws (hunting) are all adaptations." },
+    { q:"What is the role of decomposers in an ecosystem?", opts:["They make their own food via sunlight","They hunt and eat prey","They break down dead organisms, returning nutrients to the soil","They convert sunlight to chemical energy"], ans:2, fact:"Fungi and bacteria are key decomposers — without them, nutrients would stay locked in dead organisms forever." },
+    { q:"What is a gene?", opts:["A type of cell organelle","A segment of DNA that codes for a specific trait or protein","An entire chromosome","The cell's nucleus"], ans:1, fact:"Humans have about 20,000–25,000 genes — each is a set of instructions for making a specific protein." },
+    { q:"What does a food chain show?", opts:["What animals eat at different times of day","The flow of energy from one organism to the next in an ecosystem","How food is digested inside an animal","The path water takes through an ecosystem"], ans:1, fact:"Only about 10% of energy passes to the next trophic level — most is lost as heat." },
+    { q:"What is biodiversity?", opts:["Different types of food in an ecosystem","The variety of living species in an ecosystem or on Earth","A type of natural disaster","The number of trees in a forest"], ans:1, fact:"Greater biodiversity makes ecosystems more resilient to disease, climate change, and other disturbances." },
+    { q:"What is the difference between sexual and asexual reproduction?", opts:["They are the same process","Sexual involves two parents and genetic mixing; asexual involves one parent producing identical offspring","Asexual requires two parents","Sexual reproduction always requires eggs and sperm only"], ans:1, fact:"Bacteria split asexually (clones); humans reproduce sexually — combining DNA from both parents for variation." },
+    { q:"What is natural selection? (simplified)", opts:["Humans choosing which animals to breed","Organisms with helpful traits survive better and pass those traits to offspring","Completely random mutations in organisms","How animals learn from their environment"], ans:1, fact:"Over many generations, natural selection can change the traits of a whole population — it's the engine of evolution." },
+  ],
+  body: [
+    { q:"What is the main function of the digestive system?", opts:["To pump blood throughout the body","To break down food into nutrients the body can absorb","To filter metabolic waste from the blood","To produce and release hormones"], ans:1, fact:"Digestion begins in the mouth with chewing and saliva, and most nutrient absorption happens in the small intestine." },
+    { q:"What is the function of the nervous system?", opts:["To transport oxygen to body cells","To fight bacterial and viral infections","To collect information from the body and coordinate responses","To break down food for energy"], ans:2, fact:"The nervous system includes the brain, spinal cord, and billions of neurons that transmit signals almost instantly." },
+    { q:"What are the three types of muscle tissue?", opts:["Red, white, and pink","Smooth, cardiac, and skeletal","Fast, slow, and medium","Voluntary, involuntary, and reflex"], ans:1, fact:"Skeletal muscle moves bones (voluntary), cardiac muscle pumps the heart, smooth muscle lines organs like the stomach." },
+    { q:"What is the immune system's main job?", opts:["To digest and absorb nutrients","To carry oxygen to cells","To protect the body from pathogens like bacteria and viruses","To control body temperature only"], ans:2, fact:"White blood cells called lymphocytes produce antibodies that recognize and neutralize specific pathogens." },
+    { q:"What is the main job of the excretory system?", opts:["To break down food into smaller molecules","To remove metabolic waste products from the body","To absorb nutrients into the bloodstream","To produce hormones for growth"], ans:1, fact:"Your kidneys filter about 200 liters of blood per day, producing 1–2 liters of urine to remove waste." },
+    { q:"What are the main functions of the skeletal system?", opts:["Only to give the body its shape","Support, protect organs, enable movement, and produce blood cells in bone marrow","Only to store calcium","Only to produce red blood cells"], ans:1, fact:"Red and white blood cells are made in bone marrow — your skeleton is a factory, not just a frame!" },
+    { q:"What causes a reflex action?", opts:["A conscious decision made by the brain","A rapid automatic response processed by the spinal cord, not the brain","Hormones released into the blood","A learned behavioral response"], ans:1, fact:"Reflexes bypass the brain for speed — the knee-jerk reflex happens in about 50 milliseconds!" },
+    { q:"What is the endocrine system?", opts:["The system that moves lymph fluid through the body","The system of glands that produce and release hormones","The system that controls breathing rate","The system that digests fats"], ans:1, fact:"The pituitary gland (the 'master gland') controls many other glands including the thyroid and adrenal glands." },
+    { q:"What is the function of the respiratory system?", opts:["To break down food into energy","To exchange oxygen and carbon dioxide between the body and the air","To remove liquid waste from the blood","To circulate nutrients to body cells"], ans:1, fact:"Each lung has about 300 million alveoli (tiny air sacs) — if flattened out, they'd cover a tennis court!" },
+    { q:"What are the main parts of the circulatory system?", opts:["Brain, spinal cord, and nerves","Heart, blood vessels (arteries, veins, capillaries), and blood","Lungs, trachea, and diaphragm","Stomach, intestines, and liver"], ans:1, fact:"Blood makes a full circuit in about 60 seconds and travels through roughly 60,000 miles of blood vessels." },
+  ],
+  nature: [
+    { q:"What causes earthquakes?", opts:["Heavy rainfall soaking deep into the ground","Sudden movement and energy release at tectonic plate boundaries or fault lines","Volcanoes always causing ground shaking","Strong underground wind currents"], ans:1, fact:"Most earthquakes occur along fault lines — the Ring of Fire around the Pacific is the most seismically active zone." },
+    { q:"What are the four layers of Earth from outermost to innermost?", opts:["Ground, rock, lava, iron core","Crust, mantle, outer core, inner core","Soil, bedrock, magma chamber, iron","Surface, upper layer, deep layer, center"], ans:1, fact:"The inner core is solid iron despite being extremely hot, because of immense pressure — about 3.6 million atm!" },
+    { q:"What is the difference between weather and climate?", opts:["They mean the same thing","Weather is the day-to-day atmospheric conditions; climate is the average weather pattern over long periods","Climate changes daily; weather is long-term","Weather describes 30-year averages; climate is daily"], ans:1, fact:"'Climate is what you expect; weather is what you get.' Climate describes patterns over 30+ years." },
+    { q:"What is erosion?", opts:["The formation of new rock underground","The wearing away and transport of rock or soil by water, wind, ice, or gravity","The heating and melting of rock deep underground","Chemical reactions that change a rock's color"], ans:1, fact:"The Grand Canyon was carved by the Colorado River over millions of years of water erosion." },
+    { q:"What causes volcanoes to erupt?", opts:["Underground water superheating and exploding","Magma rising from the mantle through weaknesses in Earth's crust","Large earthquakes that crack the surface","Meteorite impacts causing pressure buildup"], ans:1, fact:"When magma reaches Earth's surface it's called lava — eruptions range from gentle flows to explosive blasts." },
+    { q:"What is the rock cycle?", opts:["Rocks orbiting Earth due to gravity","The continuous process by which rocks form, break down, and transform into other rock types","The process of erosion only","How scientists classify rock types"], ans:1, fact:"Any rock type can become another — igneous → sedimentary → metamorphic → back to igneous over millions of years." },
+    { q:"What is a fossil, and how does it typically form?", opts:["Any old rock found in the ground","Preserved remains or traces of ancient organisms, usually found in sedimentary rock","A type of crystal formed underground","Minerals that look like bones"], ans:1, fact:"Rapid burial prevents decomposition — sediment slowly replaces organic material with minerals over millions of years." },
+    { q:"What is the difference between renewable and nonrenewable energy?", opts:["Renewable energy is always more expensive","Renewable resources replenish naturally; nonrenewable resources take millions of years to reform","Nonrenewable resources are better for the environment","They produce the same amount of pollution"], ans:1, fact:"Solar, wind, and hydroelectric are renewable; coal, oil, and natural gas are nonrenewable fossil fuels." },
+    { q:"What keeps the water cycle continuously moving?", opts:["The Moon's gravitational pull","Solar energy powering evaporation, with gravity driving precipitation back down","Gravity alone moving water upward","Wind patterns carrying water vapor only"], ans:1, fact:"Without the Sun's energy to evaporate water, the water cycle would stop — all water would stay in the oceans." },
+    { q:"What is the difference between physical and chemical weathering?", opts:["They are the same process","Physical weathering breaks rock into smaller pieces; chemical weathering changes the rock's composition","Chemical weathering only breaks rocks mechanically","Physical weathering always involves acid"], ans:1, fact:"Frost wedging (water freezing in cracks) is physical; acid rain dissolving limestone is chemical weathering." },
+  ],
+  physics: [
+    { q:"What is Newton's First Law of Motion?", opts:["Force equals mass times acceleration","An object at rest stays at rest, and an object in motion stays in motion, unless acted on by an unbalanced force","For every action there is an equal and opposite reaction","Speed equals distance divided by time"], ans:1, fact:"This is the Law of Inertia — a hockey puck on frictionless ice would slide forever without something to stop it." },
+    { q:"What is the difference between potential energy and kinetic energy?", opts:["They are exactly the same type of energy","Potential energy is stored energy; kinetic energy is the energy of motion","Kinetic energy is stored in objects; potential is the energy of motion","Both are forms of thermal energy"], ans:1, fact:"A stretched rubber band has potential energy. When released, that stored energy converts to kinetic energy." },
+    { q:"What are atoms made of?", opts:["Only electrons orbiting a point","Protons, neutrons (in the nucleus), and electrons (orbiting outside)","Just protons and neutrons, no electrons","Groups of molecules bonded together"], ans:1, fact:"Protons are positive, electrons are negative, neutrons are neutral — and most of an atom is actually empty space!" },
+    { q:"What is density?", opts:["How heavy an object feels","The amount of mass packed into a given volume (mass ÷ volume)","How large an object appears","The temperature of a substance"], ans:1, fact:"Density explains why a heavy steel ship floats — its overall density (with hollow space) is less than water." },
+    { q:"What is the law of conservation of energy?", opts:["Energy is constantly being created by the Sun","Energy can change forms but cannot be created or destroyed","All energy eventually becomes heat and disappears","Energy always increases over time"], ans:1, fact:"Drop a ball and potential energy becomes kinetic, then sound and heat on impact — total energy stays the same!" },
+    { q:"What is acceleration?", opts:["How fast an object is currently moving","The rate of change of velocity — speeding up, slowing down, or changing direction","The total distance an object travels","An object's top or maximum speed"], ans:1, fact:"A car turning a corner at constant speed is still accelerating — because its direction (velocity) is changing!" },
+    { q:"What is the main difference between elements, compounds, and mixtures?", opts:["They are different names for the same thing","Elements have one type of atom; compounds are chemically bonded elements; mixtures are physically combined","Mixtures are chemically bonded together","Compounds contain only one type of atom"], ans:1, fact:"Oxygen (O₂) = element; water (H₂O) = compound; saltwater = mixture. You can separate a mixture physically." },
+    { q:"What is conduction as a method of heat transfer?", opts:["Heat moving through empty space as radiation","Heat transferred through direct physical contact between objects","Heat carried by moving fluids (liquid or gas)","Heat absorbed because of an object's color"], ans:1, fact:"Metal conducts heat well (pans get hot fast); wood conducts poorly (why handles stay cool longer)." },
+    { q:"What is the difference between a wave's frequency and wavelength?", opts:["They are exactly the same measurement","Frequency is the number of wave cycles per second; wavelength is the distance between two peaks","Wavelength counts the waves; frequency measures height","Higher frequency always means a longer wavelength"], ans:1, fact:"Higher frequency = shorter wavelength (and vice versa). This is why X-rays (high freq) are more energetic than radio waves." },
+    { q:"What is momentum?", opts:["The speed of a moving object","Mass multiplied by velocity (p = mv)","The force needed to stop a moving object","How long an object has been in motion"], ans:1, fact:"A slow-moving truck can have the same momentum as a fast-moving car if mass × velocity are equal — p = mv!" },
+  ],
+};
+
 const LETTERS = ['A','B','C','D'];
+
 const CAT_INFO = {
   space:   { label:'🪐 Space & Planets', color:'#6c5ce7' },
   animals: { label:'🦁 Animals',         color:'#00b894' },
@@ -593,28 +747,97 @@ const CAT_INFO = {
   physics: { label:'⚡ Forces & Energy',  color:'#fdcb6e' },
   mix:     { label:'🎲 Mixed Bag',        color:'#a29bfe' },
 };
- 
+const CAT_INFO_8TH = {
+  space:   { label:'🌌 Space Science',   color:'#00cec9' },
+  animals: { label:'🔬 Life Science',    color:'#00b894' },
+  body:    { label:'🫀 Human Body',       color:'#e17055' },
+  nature:  { label:'🌍 Earth Science',   color:'#55efc4' },
+  physics: { label:'⚡ Physical Science', color:'#fdcb6e' },
+  mix:     { label:'🎲 Mixed Bag',        color:'#a29bfe' },
+};
+const CAT_INFO_9TH = {
+  space:   { label:'🔭 Astronomy',        color:'#6c5ce7' },
+  animals: { label:'🧬 Biology',          color:'#00b894' },
+  body:    { label:'🫀 Human Physiology',  color:'#e17055' },
+  nature:  { label:'⚗️ Earth & Chemistry', color:'#00cec9' },
+  physics: { label:'⚡ Physics & Chem',   color:'#fdcb6e' },
+  mix:     { label:'🎲 Mixed Bag',         color:'#a29bfe' },
+};
+
+const CATS_ELEM = [
+  { key:'space',   icon:'🪐', label:'Space & Planets' },
+  { key:'animals', icon:'🦁', label:'Animals' },
+  { key:'body',    icon:'🫀', label:'Human Body' },
+  { key:'nature',  icon:'🌿', label:'Nature & Plants' },
+  { key:'physics', icon:'⚡', label:'Forces & Energy' },
+  { key:'mix',     icon:'🎲', label:'Mixed Bag!' },
+];
+const CATS_8TH = [
+  { key:'space',   icon:'🌌', label:'Space Science' },
+  { key:'animals', icon:'🔬', label:'Life Science' },
+  { key:'body',    icon:'🫀', label:'Human Body' },
+  { key:'nature',  icon:'🌍', label:'Earth Science' },
+  { key:'physics', icon:'⚡', label:'Physical Science' },
+  { key:'mix',     icon:'🎲', label:'Mixed Bag!' },
+];
+const CATS_9TH = [
+  { key:'space',   icon:'🔭', label:'Astronomy' },
+  { key:'animals', icon:'🧬', label:'Biology' },
+  { key:'body',    icon:'🫀', label:'Human Physiology' },
+  { key:'nature',  icon:'⚗️', label:'Earth & Chemistry' },
+  { key:'physics', icon:'⚡', label:'Physics' },
+  { key:'mix',     icon:'🎲', label:'Mixed Bag!' },
+];
+
+let gradeLevel = 'elementary';
 let selectedCategory = null, questionList = [], currentIndex = 0;
 let score = 0, lives = 3, answered = false;
 let correctCount = 0, wrongCount = 0, currentStreak = 0, bestStreak = 0;
- 
+
+function setGrade(grade, btn) {
+  gradeLevel = grade;
+  document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedCategory = null;
+  document.getElementById('start-btn').disabled = true;
+  renderCategoryGrid();
+}
+
+function renderCategoryGrid() {
+  const cats = gradeLevel === '9th' ? CATS_9TH : gradeLevel === '8th' ? CATS_8TH : CATS_ELEM;
+  const grid = document.getElementById('category-grid');
+  grid.innerHTML = '';
+  cats.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.dataset.cat = c.key;
+    btn.innerHTML = `<span class="cat-icon">${c.icon}</span>${c.label}`;
+    btn.onclick = () => selectCategory(btn);
+    grid.appendChild(btn);
+  });
+}
+
 function selectCategory(btn) {
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedCategory = btn.dataset.cat;
   document.getElementById('start-btn').disabled = false;
 }
- 
+
+// Build category grid on first load
+renderCategoryGrid();
+
 function startGame() {
   score=0; lives=3; currentIndex=0; correctCount=0; wrongCount=0; currentStreak=0; bestStreak=0; answered=false;
+  const bank = gradeLevel === '9th' ? QUESTIONS_9TH : gradeLevel === '8th' ? QUESTIONS_8TH : QUESTIONS;
   questionList = selectedCategory === 'mix'
-    ? shuffle(Object.values(QUESTIONS).flat()).slice(0,10)
-    : shuffle([...QUESTIONS[selectedCategory]]).slice(0,10);
+    ? shuffle(Object.values(bank).flat()).slice(0,10)
+    : shuffle([...bank[selectedCategory]]).slice(0,10);
   document.getElementById('q-total').textContent = questionList.length;
   showScreen('game-screen');
   renderQuestion();
 }
- 
+
 function renderQuestion() {
   answered = false;
   const q = questionList[currentIndex];
@@ -623,7 +846,8 @@ function renderQuestion() {
   document.getElementById('score-display').textContent = score;
   renderLives();
   const catKey = selectedCategory === 'mix' ? guessCat(q) : selectedCategory;
-  const info = CAT_INFO[catKey] || CAT_INFO.mix;
+  const catMap = gradeLevel === '9th' ? CAT_INFO_9TH : gradeLevel === '8th' ? CAT_INFO_8TH : CAT_INFO;
+  const info = catMap[catKey] || catMap.mix;
   const badge = document.getElementById('cat-badge');
   badge.textContent = info.label;
   badge.style.background = info.color+'33'; badge.style.borderColor = info.color+'88'; badge.style.color = info.color;
@@ -641,7 +865,7 @@ function renderQuestion() {
   document.getElementById('next-btn').style.display = 'none';
   document.getElementById('next-btn').textContent = 'Next Question →';
 }
- 
+
 function handleAnswer(idx) {
   if (answered) return;
   answered = true;
@@ -665,19 +889,19 @@ function handleAnswer(idx) {
   document.getElementById('next-btn').style.display = 'block';
   if (lives <= 0) document.getElementById('next-btn').textContent = 'See Results →';
 }
- 
+
 function renderLives() {
   let html = '';
   for (let i=0;i<3;i++) html += i < lives ? '❤️' : '🖤';
   document.getElementById('lives-display').innerHTML = html;
 }
- 
+
 function nextQuestion() {
   currentIndex++;
   if (currentIndex >= questionList.length || lives <= 0) endGame();
   else renderQuestion();
 }
- 
+
 function endGame() {
   const pct = correctCount / questionList.length;
   let trophy, title, message, stars;
@@ -696,24 +920,24 @@ function endGame() {
   showScreen('end-screen');
   if (pct >= .7) launchConfetti();
 }
- 
+
 function resetGame() {
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('start-btn').disabled = true;
   selectedCategory = null;
+  document.getElementById('start-btn').disabled = true;
+  renderCategoryGrid(); // re-render with current grade kept
   showScreen('start-screen');
 }
- 
+
 function guessCat(q) {
   for (const [cat, qs] of Object.entries(QUESTIONS)) { if (qs.includes(q)) return cat; }
   return 'mix';
 }
- 
- 
+
+
 // ══════════════════════════════════════════════
 //  PLANET ORDER GAME
 // ══════════════════════════════════════════════
- 
+
 const PLANETS = [
   { name:'Mercury', order:0, bg:'radial-gradient(circle at 35% 30%, #d4d4d4, #9e9e9e, #616161)', fact:'Closest planet to the Sun! A full year is only 88 Earth days.' },
   { name:'Venus',   order:1, bg:'radial-gradient(circle at 35% 30%, #fff9c4, #f5c518, #b8860b)', fact:'The hottest planet — clouds trap heat like a giant greenhouse!' },
@@ -724,17 +948,17 @@ const PLANETS = [
   { name:'Uranus',  order:6, bg:'radial-gradient(circle at 35% 30%, #b2ebf2, #4dd0e1, #00838f)', fact:'An ice giant that spins almost completely on its side — very unusual!' },
   { name:'Neptune', order:7, bg:'radial-gradient(circle at 35% 30%, #9fa8da, #5c6bc0, #1a237e)', fact:'Farthest planet! One Neptune year lasts 165 Earth years.' },
 ];
- 
+
 // State
 let pSlots = new Array(8).fill(null); // null | planet name
 let pDragSource = null; // { planet: name, fromSlot: number | -1 (tray) }
 let pChecked = false;
 let pTrayOrder = []; // shuffled planet names for tray display
- 
+
 // Touch drag state
 let touchDragInfo = null;
 let touchCloneEl = null;
- 
+
 function startPlanetGame() {
   pSlots = new Array(8).fill(null);
   pDragSource = null;
@@ -743,19 +967,19 @@ function startPlanetGame() {
   showScreen('planet-screen');
   renderPlanetBoard();
 }
- 
+
 function clearPlanetSlots() {
   pSlots = new Array(8).fill(null);
   pChecked = false;
   renderPlanetBoard();
 }
- 
+
 // ── Render ──────────────────────────────────
 function renderPlanetBoard() {
   renderSolarRow();
   renderTray();
 }
- 
+
 function makePlanetBall(p, size) {
   // Returns innerHTML for a planet ball (with ring if Saturn)
   const ring = p.hasRing
@@ -765,23 +989,23 @@ function makePlanetBall(p, size) {
     <div class="p-ball" style="background:${p.bg};width:${size}px;height:${size}px;">${ring}</div>
   </div>`;
 }
- 
+
 function renderSolarRow() {
   const row = document.getElementById('solar-row');
   row.innerHTML = '';
- 
+
   // Sun
   const sunDiv = document.createElement('div');
   sunDiv.className = 'sun-icon';
   sunDiv.innerHTML = `<div class="sun-ball"></div><div class="sun-label">SUN</div>`;
   row.appendChild(sunDiv);
- 
+
   // Orbit dots
   const dots = document.createElement('div');
   dots.className = 'orbit-dots';
   dots.innerHTML = '<div class="orbit-dot"></div><div class="orbit-dot"></div><div class="orbit-dot"></div>';
   row.appendChild(dots);
- 
+
   // Slots
   pSlots.forEach((planetName, i) => {
     const slot = document.createElement('div');
@@ -791,7 +1015,7 @@ function renderSolarRow() {
     slot.ondragleave = () => slot.classList.remove('drag-over');
     slot.ondragenter = e => e.preventDefault();
     slot.ondrop      = e => { e.preventDefault(); slot.classList.remove('drag-over'); dropOnSlot(i); };
- 
+
     if (planetName) {
       const p = PLANETS.find(pl => pl.name === planetName);
       slot.innerHTML = `<div class="slot-num">${i+1}</div>` + makePlanetBall(p, 46) + `<div class="p-name">${p.name}</div>`;
@@ -813,15 +1037,15 @@ function renderSolarRow() {
     row.appendChild(slot);
   });
 }
- 
+
 function renderTray() {
   const tray = document.getElementById('planet-tray');
   tray.innerHTML = '';
- 
+
   const inTray = pTrayOrder
     .map(name => PLANETS.find(p => p.name === name))
     .filter(p => !pSlots.includes(p.name));
- 
+
   if (inTray.length === 0) {
     tray.innerHTML = '<div class="tray-placeholder">All planets placed! ✅ Check your order below.</div>';
     document.getElementById('check-btn').disabled = false;
@@ -832,7 +1056,7 @@ function renderTray() {
       card.className = 'planet-card';
       card.setAttribute('draggable','true');
       card.innerHTML = makePlanetBall(p, 58) + `<div class="p-name">${p.name}</div>`;
- 
+
       card.ondragstart = e => {
         pDragSource = { planet: p.name, fromSlot: -1 };
         setTimeout(() => card.classList.add('dragging-ghost'), 0);
@@ -843,21 +1067,21 @@ function renderTray() {
       tray.appendChild(card);
     });
   }
- 
+
   // Tray as drop zone (to return planets)
   tray.ondragover  = e => { e.preventDefault(); tray.classList.add('drag-over-tray'); };
   tray.ondragleave = () => tray.classList.remove('drag-over-tray');
   tray.ondrop      = e => { e.preventDefault(); tray.classList.remove('drag-over-tray'); dropOnTray(); };
 }
- 
+
 // ── Drop Logic ───────────────────────────────
 function dropOnSlot(slotIdx) {
   if (!pDragSource) return;
   const { planet, fromSlot } = pDragSource;
   const occupant = pSlots[slotIdx];
- 
+
   if (fromSlot >= 0) pSlots[fromSlot] = null; // clear source slot
- 
+
   if (occupant !== null) {
     if (fromSlot >= 0) {
       pSlots[fromSlot] = occupant; // swap
@@ -869,7 +1093,7 @@ function dropOnSlot(slotIdx) {
   pChecked = false;
   renderPlanetBoard();
 }
- 
+
 function dropOnTray() {
   if (!pDragSource) return;
   const { fromSlot } = pDragSource;
@@ -878,7 +1102,7 @@ function dropOnTray() {
   pChecked = false;
   renderPlanetBoard();
 }
- 
+
 // ── Touch Drag ───────────────────────────────
 function onTouchDragStart(e, planet, fromSlot) {
   e.preventDefault();
@@ -887,7 +1111,7 @@ function onTouchDragStart(e, planet, fromSlot) {
   const touch = e.touches[0];
   const rect = e.currentTarget.getBoundingClientRect();
   touchDragInfo = { offX: touch.clientX - rect.left, offY: touch.clientY - rect.top };
- 
+
   touchCloneEl = e.currentTarget.cloneNode(true);
   Object.assign(touchCloneEl.style, {
     position:'fixed', left:rect.left+'px', top:rect.top+'px',
@@ -897,7 +1121,7 @@ function onTouchDragStart(e, planet, fromSlot) {
   });
   document.body.appendChild(touchCloneEl);
 }
- 
+
 document.addEventListener('touchmove', e => {
   if (!touchCloneEl) return;
   e.preventDefault();
@@ -905,18 +1129,18 @@ document.addEventListener('touchmove', e => {
   touchCloneEl.style.left = (touch.clientX - (touchDragInfo?.offX || 0)) + 'px';
   touchCloneEl.style.top  = (touch.clientY - (touchDragInfo?.offY || 0)) + 'px';
 }, { passive: false });
- 
+
 document.addEventListener('touchend', e => {
   if (!pDragSource || !touchCloneEl) return;
   touchCloneEl.remove(); touchCloneEl = null;
- 
+
   const touch = e.changedTouches[0];
   const el = document.elementFromPoint(touch.clientX, touch.clientY);
   if (!el) { pDragSource = null; return; }
- 
+
   const slotEl = el.closest('.p-slot');
   const trayEl = el.closest('#planet-tray');
- 
+
   if (slotEl) {
     dropOnSlot(parseInt(slotEl.dataset.slotIdx));
   } else if (trayEl) {
@@ -926,7 +1150,7 @@ document.addEventListener('touchend', e => {
   }
   touchDragInfo = null;
 }, { passive: false });
- 
+
 // ── Check Order ──────────────────────────────
 function checkPlanetOrder() {
   // Check how many are placed and correct
@@ -937,9 +1161,9 @@ function checkPlanetOrder() {
       if (p && p.order === i) correct++;
     }
   });
- 
+
   const placed = pSlots.filter(s => s !== null).length;
- 
+
   // Show results
   let trophy, title, tagline;
   if (correct === 8 && placed === 8) {
@@ -952,12 +1176,12 @@ function checkPlanetOrder() {
   } else {
     trophy = '🔬'; title = 'Keep Learning!'; tagline = `${correct} out of 8 correct — check the correct order below!`;
   }
- 
+
   document.getElementById('p-trophy').textContent = trophy;
   document.getElementById('p-title').textContent = title;
   document.getElementById('p-score').textContent = `${correct} / 8`;
   document.getElementById('p-tagline').textContent = tagline;
- 
+
   // Build correct order row
   const crow = document.getElementById('correct-order-row');
   crow.innerHTML = '';
@@ -978,12 +1202,9 @@ function checkPlanetOrder() {
     `;
     crow.appendChild(div);
   });
- 
+
   showScreen('planet-result-screen');
 }
 </script>
 </body>
 </html>
- 
-
-
